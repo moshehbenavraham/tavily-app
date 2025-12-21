@@ -1,0 +1,22 @@
+{
+  "version": "2.0",
+  "project_name": "tavily-app",
+  "description": "AI-powered search application using Tavily API",
+  "current_phase": 0,
+  "current_session": null,
+  "phases": {
+    "0": {
+      "name": "Core Setup",
+      "description": "Backend Tavily API integration with SDK, service layer, schemas, routes, and testing",
+      "status": "not_started",
+      "session_count": 6
+    },
+    "1": {
+      "name": "Frontend Integration",
+      "status": "not_started",
+      "session_count": 0
+    }
+  },
+  "completed_sessions": [],
+  "next_session_history": []
+}

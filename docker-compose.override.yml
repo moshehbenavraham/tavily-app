@@ -48,17 +48,21 @@ services:
   db:
     restart: "no"
     ports:
-      - "5432:5432"
+      - "5439:5432"
 
   adminer:
     restart: "no"
     ports:
-      - "8080:8080"
+      - "8088:8080"
+
+  prestart:
+    environment:
+      POSTGRES_PORT: "5432"
 
   backend:
     restart: "no"
     ports:
-      - "8000:8000"
+      - "8008:8000"
     build:
       context: ./backend
     # command: sleep infinity  # Infinite loop to keep container alive doing nothing
@@ -81,6 +85,7 @@ services:
     volumes:
       - ./backend/htmlcov:/app/htmlcov
     environment:
+      POSTGRES_PORT: "5432"
       SMTP_HOST: "mailcatcher"
       SMTP_PORT: "1025"
       SMTP_TLS: "false"
@@ -95,11 +100,11 @@ services:
   frontend:
     restart: "no"
     ports:
-      - "5173:80"
+      - "5179:80"
     build:
       context: ./frontend
       args:
-        - VITE_API_URL=http://localhost:8000
+        - VITE_API_URL=http://localhost:8008
         - NODE_ENV=development
 
   playwright:

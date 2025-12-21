@@ -1,5 +1,13 @@
 .vscode
 node_modules/
+
+# Environment files (ignore all .env files except .example)
+.env
+.env.local
+.env.*.local
+**/.env
+!.env.example
+!**/.env.example
 /test-results/
 /playwright-report/
 /blob-report/
