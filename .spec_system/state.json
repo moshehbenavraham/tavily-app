@@ -27,7 +27,8 @@
     "phase00-session06-testing-suite",
     "phase01-session01-api-client-and-navigation",
     "phase01-session02-search-form-and-query",
-    "phase01-session03-search-results-display"
+    "phase01-session03-search-results-display",
+    "phase01-session04-extract-page"
   ],
   "next_session_history": [
     {
@@ -73,6 +74,11 @@
     {
       "date": "2025-12-21",
       "session": "phase01-session03-search-results-display",
+      "status": "completed"
+    },
+    {
+      "date": "2025-12-22",
+      "session": "phase01-session04-extract-page",
       "status": "completed"
     }
   ]

@@ -360,6 +360,30 @@ class SearchResponse(BaseModel):
         description="List of relevant images (if include_images=True)",
     )
 
+    @field_validator("images", mode="before")
+    @classmethod
+    def validate_images(
+        cls, v: list[str | dict[str, Any]] | None
+    ) -> list[dict[str, Any]]:
+        """Convert image URLs or dicts to SearchImage-compatible format.
+
+        Tavily API returns images as:
+        - List of URL strings (when include_image_descriptions=False)
+        - List of dicts with url/description (when include_image_descriptions=True)
+        """
+        if v is None:
+            return []
+        result = []
+        for item in v:
+            if isinstance(item, str):
+                result.append({"url": item})
+            elif isinstance(item, dict):
+                result.append(item)
+            else:
+                # Skip invalid items
+                continue
+        return result
+
 
 class ExtractResponse(BaseModel):
     """Response schema for Tavily URL content extraction.

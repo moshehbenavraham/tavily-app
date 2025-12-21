@@ -4,7 +4,7 @@
 **Sessions**: 6
 **Estimated Duration**: 12-24 hours
 
-**Progress**: 3/6 sessions (50%)
+**Progress**: 4/6 sessions (67%)
 
 ---
 
@@ -23,7 +23,7 @@ The frontend follows the existing boilerplate patterns: TanStack Router for rout
 | 01 | API Client and Navigation | Complete | 22 | 2025-12-21 |
 | 02 | Search Form and Query | Complete | 22 | 2025-12-21 |
 | 03 | Search Results Display | Complete | 22 | 2025-12-21 |
-| 04 | Extract Page | Not Started | ~25 | - |
+| 04 | Extract Page | Complete | 22 | 2025-12-22 |
 | 05 | Crawl Page | Not Started | ~25 | - |
 | 06 | Map Page and Polish | Not Started | ~20 | - |
 
@@ -46,11 +46,16 @@ The frontend follows the existing boilerplate patterns: TanStack Router for rout
 - **Tasks**: 22/22
 - **Deliverables**: SearchResultCard, SearchResultsList, SearchResultDetail dialog, SearchSkeleton, SearchEmptyState, SearchMetadata, SearchImageGrid components
 
+### Session 04: Extract Page
+- **Completed**: 2025-12-22
+- **Tasks**: 22/22
+- **Deliverables**: ExtractForm, ExtractResultCard, ExtractResultsList, ExtractSkeleton, ExtractEmptyState, useExtract hook, Zod schema
+
 ---
 
 ## Upcoming Sessions
 
-- Session 04: Extract Page
+- Session 05: Crawl Page
 
 ---
 
@@ -108,7 +113,7 @@ Phase complete when:
 - [x] Search form validates input and displays results correctly
 - [ ] Extract, crawl, and map pages are fully functional
 - [x] Loading states shown during API calls (skeletons/spinners)
-- [ ] Errors displayed via toast notifications
+- [x] Errors displayed via toast notifications
 - [ ] UI is responsive on desktop and mobile
 - [ ] All new components follow existing code patterns
 - [x] No TypeScript errors or lint warnings
