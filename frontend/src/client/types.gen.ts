@@ -9,6 +9,140 @@ export type Body_login_login_access_token = {
     client_secret?: (string | null);
 };
 
+/**
+ * Request schema for Tavily site crawling.
+ *
+ * Contains parameters for recursive website crawling including depth,
+ * breadth, limits, and path/domain filtering options.
+ */
+export type CrawlRequest = {
+    /**
+     * Starting URL for the crawl
+     */
+    url: string;
+    /**
+     * Maximum link depth to crawl from starting URL (0 = starting page only)
+     */
+    max_depth?: number;
+    /**
+     * Maximum number of links to follow per page
+     */
+    max_breadth?: number;
+    /**
+     * Maximum total number of pages to crawl
+     */
+    limit?: number;
+    /**
+     * Natural language instructions for content selection
+     */
+    instructions?: (string | null);
+    /**
+     * URL path patterns to include in crawl (e.g., ['/docs/', '/api/'])
+     */
+    select_paths?: (Array<(string)> | null);
+    /**
+     * Additional domains to include in crawl (e.g., ['api.example.com'])
+     */
+    select_domains?: (Array<(string)> | null);
+};
+
+/**
+ * Response schema for Tavily site crawling.
+ *
+ * Contains the base URL, list of crawled page results, and total count.
+ */
+export type CrawlResponse = {
+    /**
+     * The starting URL for the crawl
+     */
+    base_url: string;
+    /**
+     * List of crawled page results with content
+     */
+    results?: Array<CrawlResult>;
+    /**
+     * Total number of pages successfully crawled
+     */
+    total_pages?: number;
+    [key: string]: unknown | string | CrawlResult | number;
+};
+
+/**
+ * Individual page result from site crawling.
+ *
+ * Represents a single crawled page with its URL and extracted content.
+ */
+export type CrawlResult = {
+    /**
+     * URL of the crawled page
+     */
+    url: string;
+    /**
+     * Extracted text content from the page
+     */
+    raw_content?: (string | null);
+    /**
+     * Additional metadata about the crawled page
+     */
+    metadata?: ({
+    [key: string]: unknown;
+} | null);
+    [key: string]: unknown | string;
+};
+
+/**
+ * Request schema for Tavily URL content extraction.
+ *
+ * Supports both single URL and batch URL extraction. The urls field
+ * accepts either a single URL string or a list of URL strings.
+ */
+export type ExtractRequest = {
+    /**
+     * Single URL or list of URLs to extract content from
+     */
+    urls: (string | Array<(string)>);
+};
+
+/**
+ * Response schema for Tavily URL content extraction.
+ *
+ * Contains the extraction results for all requested URLs.
+ */
+export type ExtractResponse = {
+    /**
+     * List of extraction results for each URL
+     */
+    results?: Array<ExtractResult>;
+    /**
+     * List of URLs that failed to extract with error details
+     */
+    failed_results?: Array<{
+        [key: string]: unknown;
+    }>;
+    [key: string]: unknown | ExtractResult;
+};
+
+/**
+ * Extraction result for a single URL.
+ *
+ * Contains the extracted content from a URL including text and images.
+ */
+export type ExtractResult = {
+    /**
+     * Source URL that was extracted
+     */
+    url: string;
+    /**
+     * Extracted text content from the page
+     */
+    raw_content: string;
+    /**
+     * List of image URLs found on the page
+     */
+    images?: Array<(string)>;
+    [key: string]: unknown | string;
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -35,6 +169,64 @@ export type ItemUpdate = {
     description?: (string | null);
 };
 
+/**
+ * Request schema for Tavily URL mapping (sitemap generation).
+ *
+ * Contains parameters for discovering URLs from a website without
+ * extracting content. Useful for understanding site structure.
+ */
+export type MapRequest = {
+    /**
+     * Starting URL for mapping
+     */
+    url: string;
+    /**
+     * Maximum link depth to discover from starting URL
+     */
+    max_depth?: number;
+    /**
+     * Maximum number of links to follow per page
+     */
+    max_breadth?: number;
+    /**
+     * Maximum total number of URLs to discover
+     */
+    limit?: number;
+    /**
+     * Natural language instructions for URL selection
+     */
+    instructions?: (string | null);
+    /**
+     * URL path patterns to include (e.g., ['/products/', '/docs/'])
+     */
+    select_paths?: (Array<(string)> | null);
+    /**
+     * Additional domains to include in mapping
+     */
+    select_domains?: (Array<(string)> | null);
+};
+
+/**
+ * Response schema for Tavily URL mapping.
+ *
+ * Contains the base URL, list of discovered URLs, and total count.
+ */
+export type MapResponse = {
+    /**
+     * The starting URL for mapping
+     */
+    base_url: string;
+    /**
+     * List of discovered URL strings
+     */
+    urls?: Array<(string)>;
+    /**
+     * Total number of URLs discovered
+     */
+    total_urls?: number;
+    [key: string]: unknown | string | number;
+};
+
 export type Message = {
     message: string;
 };
@@ -50,6 +242,146 @@ export type PrivateUserCreate = {
     full_name: string;
     is_verified?: boolean;
 };
+
+/**
+ * Search depth options for Tavily web search.
+ *
+ * Attributes:
+ * BASIC: Standard search, faster response time.
+ * ADVANCED: Comprehensive search with more detailed results.
+ */
+export type SearchDepth = 'basic' | 'advanced';
+
+/**
+ * Image result from Tavily search.
+ *
+ * Represents an image found during search with URL and optional description.
+ */
+export type SearchImage = {
+    /**
+     * URL of the image
+     */
+    url: string;
+    /**
+     * Description of the image (if include_image_descriptions=True)
+     */
+    description?: (string | null);
+    [key: string]: unknown | string;
+};
+
+/**
+ * Request schema for Tavily web search.
+ *
+ * Contains all parameters for performing a web search including query,
+ * depth settings, result filtering, and content inclusion options.
+ */
+export type SearchRequest = {
+    /**
+     * Search query string
+     */
+    query: string;
+    /**
+     * Search depth - basic for faster results, advanced for comprehensive
+     */
+    search_depth?: SearchDepth;
+    /**
+     * Topic category - general for web content, news for recent articles
+     */
+    topic?: SearchTopic;
+    /**
+     * Maximum number of results to return (1-20)
+     */
+    max_results?: number;
+    /**
+     * Include relevant images in search results
+     */
+    include_images?: boolean;
+    /**
+     * Include descriptions for images (requires include_images=True)
+     */
+    include_image_descriptions?: boolean;
+    /**
+     * Include AI-generated answer summary
+     */
+    include_answer?: boolean;
+    /**
+     * Include raw HTML content of result pages
+     */
+    include_raw_content?: boolean;
+    /**
+     * List of domains to restrict search to (e.g., ['example.com'])
+     */
+    include_domains?: (Array<(string)> | null);
+    /**
+     * List of domains to exclude from search (e.g., ['pinterest.com'])
+     */
+    exclude_domains?: (Array<(string)> | null);
+};
+
+/**
+ * Response schema for Tavily web search.
+ *
+ * Contains the original query, list of search results, and optional
+ * AI-generated answer and images based on request parameters.
+ */
+export type SearchResponse = {
+    /**
+     * The original search query
+     */
+    query: string;
+    /**
+     * List of search results
+     */
+    results?: Array<SearchResult>;
+    /**
+     * AI-generated answer summary (if include_answer=True)
+     */
+    answer?: (string | null);
+    /**
+     * List of relevant images (if include_images=True)
+     */
+    images?: Array<SearchImage>;
+    [key: string]: unknown | string | SearchResult | SearchImage;
+};
+
+/**
+ * Individual search result from Tavily web search.
+ *
+ * Represents a single search result with URL, title, content snippet,
+ * and optional additional fields based on search parameters.
+ */
+export type SearchResult = {
+    /**
+     * URL of the search result page
+     */
+    url: string;
+    /**
+     * Title of the search result page
+     */
+    title: string;
+    /**
+     * Snippet or summary of the page content
+     */
+    content: string;
+    /**
+     * Relevance score for this result
+     */
+    score: number;
+    /**
+     * Raw HTML content of the page (if include_raw_content=True)
+     */
+    raw_content?: (string | null);
+    [key: string]: unknown | string | number;
+};
+
+/**
+ * Search topic categories for Tavily web search.
+ *
+ * Attributes:
+ * GENERAL: General web content search.
+ * NEWS: News-focused search for recent articles and updates.
+ */
+export type SearchTopic = 'general' | 'news';
 
 export type Token = {
     access_token: string;
@@ -170,6 +502,30 @@ export type PrivateCreateUserData = {
 };
 
 export type PrivateCreateUserResponse = (UserPublic);
+
+export type TavilySearchData = {
+    requestBody: SearchRequest;
+};
+
+export type TavilySearchResponse = (SearchResponse);
+
+export type TavilyExtractData = {
+    requestBody: ExtractRequest;
+};
+
+export type TavilyExtractResponse = (ExtractResponse);
+
+export type TavilyCrawlData = {
+    requestBody: CrawlRequest;
+};
+
+export type TavilyCrawlResponse = (CrawlResponse);
+
+export type TavilyMapUrlsData = {
+    requestBody: MapRequest;
+};
+
+export type TavilyMapUrlsResponse = (MapResponse);
 
 export type UsersReadUsersData = {
     limit?: number;

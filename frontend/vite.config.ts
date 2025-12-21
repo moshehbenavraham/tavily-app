@@ -19,4 +19,37 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Core React
+          react: ["react", "react-dom"],
+          // TanStack ecosystem
+          "tanstack-router": ["@tanstack/react-router"],
+          "tanstack-query": ["@tanstack/react-query"],
+          "tanstack-table": ["@tanstack/react-table"],
+          // Radix UI primitives
+          radix: [
+            "@radix-ui/react-avatar",
+            "@radix-ui/react-checkbox",
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-label",
+            "@radix-ui/react-radio-group",
+            "@radix-ui/react-scroll-area",
+            "@radix-ui/react-select",
+            "@radix-ui/react-separator",
+            "@radix-ui/react-slot",
+            "@radix-ui/react-tabs",
+            "@radix-ui/react-tooltip",
+          ],
+          // Icons
+          icons: ["lucide-react", "react-icons"],
+          // Form and validation
+          forms: ["react-hook-form", "@hookform/resolvers", "zod"],
+        },
+      },
+    },
+  },
 })

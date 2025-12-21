@@ -16,7 +16,11 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
+import { Route as LayoutSearchRouteImport } from './routes/_layout/search'
+import { Route as LayoutMapRouteImport } from './routes/_layout/map'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
+import { Route as LayoutExtractRouteImport } from './routes/_layout/extract'
+import { Route as LayoutCrawlRouteImport } from './routes/_layout/crawl'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
 
 const SignupRoute = SignupRouteImport.update({
@@ -53,9 +57,29 @@ const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutSearchRoute = LayoutSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutMapRoute = LayoutMapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutItemsRoute = LayoutItemsRouteImport.update({
   id: '/items',
   path: '/items',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutExtractRoute = LayoutExtractRouteImport.update({
+  id: '/extract',
+  path: '/extract',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutCrawlRoute = LayoutCrawlRouteImport.update({
+  id: '/crawl',
+  path: '/crawl',
   getParentRoute: () => LayoutRoute,
 } as any)
 const LayoutAdminRoute = LayoutAdminRouteImport.update({
@@ -70,7 +94,11 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
+  '/crawl': typeof LayoutCrawlRoute
+  '/extract': typeof LayoutExtractRoute
   '/items': typeof LayoutItemsRoute
+  '/map': typeof LayoutMapRoute
+  '/search': typeof LayoutSearchRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
 }
@@ -80,7 +108,11 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
+  '/crawl': typeof LayoutCrawlRoute
+  '/extract': typeof LayoutExtractRoute
   '/items': typeof LayoutItemsRoute
+  '/map': typeof LayoutMapRoute
+  '/search': typeof LayoutSearchRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
 }
@@ -92,7 +124,11 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/_layout/admin': typeof LayoutAdminRoute
+  '/_layout/crawl': typeof LayoutCrawlRoute
+  '/_layout/extract': typeof LayoutExtractRoute
   '/_layout/items': typeof LayoutItemsRoute
+  '/_layout/map': typeof LayoutMapRoute
+  '/_layout/search': typeof LayoutSearchRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
 }
@@ -104,7 +140,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/admin'
+    | '/crawl'
+    | '/extract'
     | '/items'
+    | '/map'
+    | '/search'
     | '/settings'
     | '/'
   fileRoutesByTo: FileRoutesByTo
@@ -114,7 +154,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/admin'
+    | '/crawl'
+    | '/extract'
     | '/items'
+    | '/map'
+    | '/search'
     | '/settings'
     | '/'
   id:
@@ -125,7 +169,11 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/_layout/admin'
+    | '/_layout/crawl'
+    | '/_layout/extract'
     | '/_layout/items'
+    | '/_layout/map'
+    | '/_layout/search'
     | '/_layout/settings'
     | '/_layout/'
   fileRoutesById: FileRoutesById
@@ -189,11 +237,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutSettingsRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/search': {
+      id: '/_layout/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof LayoutSearchRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/map': {
+      id: '/_layout/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof LayoutMapRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/items': {
       id: '/_layout/items'
       path: '/items'
       fullPath: '/items'
       preLoaderRoute: typeof LayoutItemsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/extract': {
+      id: '/_layout/extract'
+      path: '/extract'
+      fullPath: '/extract'
+      preLoaderRoute: typeof LayoutExtractRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/crawl': {
+      id: '/_layout/crawl'
+      path: '/crawl'
+      fullPath: '/crawl'
+      preLoaderRoute: typeof LayoutCrawlRouteImport
       parentRoute: typeof LayoutRoute
     }
     '/_layout/admin': {
@@ -208,14 +284,22 @@ declare module '@tanstack/react-router' {
 
 interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
+  LayoutCrawlRoute: typeof LayoutCrawlRoute
+  LayoutExtractRoute: typeof LayoutExtractRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
+  LayoutMapRoute: typeof LayoutMapRoute
+  LayoutSearchRoute: typeof LayoutSearchRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
+  LayoutCrawlRoute: LayoutCrawlRoute,
+  LayoutExtractRoute: LayoutExtractRoute,
   LayoutItemsRoute: LayoutItemsRoute,
+  LayoutMapRoute: LayoutMapRoute,
+  LayoutSearchRoute: LayoutSearchRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }

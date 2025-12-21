@@ -27,7 +27,12 @@ class TavilySettings(BaseSettings):
         TAVILY_PROXY: Optional HTTP proxy URL for API requests
     """
 
-    model_config = SettingsConfigDict(env_prefix="TAVILY_")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_ignore_empty=True,
+        extra="ignore",
+        env_prefix="TAVILY_",
+    )
 
     # Required: Tavily API key (obtain from tavily.com)
     api_key: str
@@ -49,8 +54,7 @@ def parse_cors(v: Any) -> list[str] | str:
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        # Use top level .env file (one level above ./backend/)
-        env_file="../.env",
+        env_file=".env",
         env_ignore_empty=True,
         extra="ignore",
     )

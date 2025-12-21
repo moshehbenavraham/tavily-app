@@ -108,7 +108,7 @@ This system delivers the product via phases. Each phase is implemented via multi
 | Phase | Name | Sessions | Status |
 |-------|------|----------|--------|
 | 00 | Core Setup | 6 | Complete |
-| 01 | Frontend Integration | TBD | Not Started |
+| 01 | Frontend Integration | 6 | Not Started |
 
 ## Phase 00: Core Setup
 
@@ -145,11 +145,18 @@ Session specifications in `.spec_system/PRD/phase_00/`.
 5. Add navigation and integrate with existing UI patterns
 6. Handle loading states, errors, and edge cases
 
-### Sessions (To Be Defined)
+### Sessions
 
-Sessions are defined via `/phasebuild` as `session_NN_name.md` stubs under `.spec_system/PRD/phase_01/`.
+| Session | Name | Est. Tasks |
+|---------|------|------------|
+| 01 | API Client and Navigation | ~20 |
+| 02 | Search Form and Query | ~25 |
+| 03 | Search Results Display | ~25 |
+| 04 | Extract Page | ~25 |
+| 05 | Crawl Page | ~25 |
+| 06 | Map Page and Polish | ~20 |
 
-**Note**: Run `/phasebuild` after completing Phase 00 to define Phase 01 sessions.
+Session specifications in `.spec_system/PRD/phase_01/`.
 
 ## Technical Stack
 

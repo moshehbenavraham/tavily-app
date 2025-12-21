@@ -3,7 +3,7 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, TavilySearchData, TavilySearchResponse, TavilyExtractData, TavilyExtractResponse, TavilyCrawlData, TavilyCrawlResponse, TavilyMapUrlsData, TavilyMapUrlsResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
 
 export class ItemsService {
     /**
@@ -226,6 +226,144 @@ export class PrivateService {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/v1/private/users/',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class TavilyService {
+    /**
+     * Search
+     * Perform a web search using Tavily API.
+     *
+     * Executes a web search with the provided query and parameters, returning
+     * relevant search results and optionally an AI-generated answer.
+     *
+     * Args:
+     * current_user: Authenticated user (required for authorization).
+     * tavily: Injected TavilyService instance.
+     * request: Search request with query and optional parameters.
+     *
+     * Returns:
+     * SearchResponse with query, results, and optional answer/images.
+     *
+     * Raises:
+     * TavilyAPIError: If the Tavily API request fails.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns SearchResponse Successful Response
+     * @throws ApiError
+     */
+    public static search(data: TavilySearchData): CancelablePromise<TavilySearchResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/tavily/search',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Extract
+     * Extract content from one or more URLs.
+     *
+     * Uses Tavily extraction API to retrieve clean, structured content from
+     * web pages. Supports both single URL and batch URL extraction.
+     *
+     * Args:
+     * current_user: Authenticated user (required for authorization).
+     * tavily: Injected TavilyService instance.
+     * request: Extract request with URL or list of URLs.
+     *
+     * Returns:
+     * ExtractResponse with extraction results for each URL.
+     *
+     * Raises:
+     * TavilyAPIError: If the Tavily API request fails.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns ExtractResponse Successful Response
+     * @throws ApiError
+     */
+    public static extract(data: TavilyExtractData): CancelablePromise<TavilyExtractResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/tavily/extract',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Crawl
+     * Crawl a website starting from a given URL.
+     *
+     * Performs recursive crawling of a website, extracting content from
+     * discovered pages up to the specified depth and breadth limits.
+     *
+     * Args:
+     * current_user: Authenticated user (required for authorization).
+     * tavily: Injected TavilyService instance.
+     * request: Crawl request with URL and crawl parameters.
+     *
+     * Returns:
+     * CrawlResponse with base URL, crawled page results, and total count.
+     *
+     * Raises:
+     * TavilyAPIError: If the Tavily API request fails.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns CrawlResponse Successful Response
+     * @throws ApiError
+     */
+    public static crawl(data: TavilyCrawlData): CancelablePromise<TavilyCrawlResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/tavily/crawl',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Map Urls
+     * Generate a sitemap of URLs from a website.
+     *
+     * Discovers and returns URLs from a website without extracting content.
+     * Useful for understanding site structure before targeted extraction.
+     *
+     * Args:
+     * current_user: Authenticated user (required for authorization).
+     * tavily: Injected TavilyService instance.
+     * request: Map request with URL and mapping parameters.
+     *
+     * Returns:
+     * MapResponse with base URL, discovered URLs, and total count.
+     *
+     * Raises:
+     * TavilyAPIError: If the Tavily API request fails.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns MapResponse Successful Response
+     * @throws ApiError
+     */
+    public static mapUrls(data: TavilyMapUrlsData): CancelablePromise<TavilyMapUrlsResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/tavily/map',
             body: data.requestBody,
             mediaType: 'application/json',
             errors: {

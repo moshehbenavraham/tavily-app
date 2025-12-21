@@ -55,6 +55,247 @@ export const Body_login_login_access_tokenSchema = {
     title: 'Body_login-login_access_token'
 } as const;
 
+export const CrawlRequestSchema = {
+    properties: {
+        url: {
+            type: 'string',
+            title: 'Url',
+            description: 'Starting URL for the crawl'
+        },
+        max_depth: {
+            type: 'integer',
+            minimum: 0,
+            title: 'Max Depth',
+            description: 'Maximum link depth to crawl from starting URL (0 = starting page only)',
+            default: 1
+        },
+        max_breadth: {
+            type: 'integer',
+            minimum: 1,
+            title: 'Max Breadth',
+            description: 'Maximum number of links to follow per page',
+            default: 20
+        },
+        limit: {
+            type: 'integer',
+            minimum: 1,
+            title: 'Limit',
+            description: 'Maximum total number of pages to crawl',
+            default: 50
+        },
+        instructions: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 1000
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Instructions',
+            description: 'Natural language instructions for content selection'
+        },
+        select_paths: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Select Paths',
+            description: "URL path patterns to include in crawl (e.g., ['/docs/', '/api/'])"
+        },
+        select_domains: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Select Domains',
+            description: "Additional domains to include in crawl (e.g., ['api.example.com'])"
+        }
+    },
+    additionalProperties: false,
+    type: 'object',
+    required: ['url'],
+    title: 'CrawlRequest',
+    description: `Request schema for Tavily site crawling.
+
+Contains parameters for recursive website crawling including depth,
+breadth, limits, and path/domain filtering options.`
+} as const;
+
+export const CrawlResponseSchema = {
+    properties: {
+        base_url: {
+            type: 'string',
+            title: 'Base Url',
+            description: 'The starting URL for the crawl'
+        },
+        results: {
+            items: {
+                '$ref': '#/components/schemas/CrawlResult'
+            },
+            type: 'array',
+            title: 'Results',
+            description: 'List of crawled page results with content'
+        },
+        total_pages: {
+            type: 'integer',
+            title: 'Total Pages',
+            description: 'Total number of pages successfully crawled',
+            default: 0
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['base_url'],
+    title: 'CrawlResponse',
+    description: `Response schema for Tavily site crawling.
+
+Contains the base URL, list of crawled page results, and total count.`
+} as const;
+
+export const CrawlResultSchema = {
+    properties: {
+        url: {
+            type: 'string',
+            title: 'Url',
+            description: 'URL of the crawled page'
+        },
+        raw_content: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Raw Content',
+            description: 'Extracted text content from the page'
+        },
+        metadata: {
+            anyOf: [
+                {
+                    additionalProperties: true,
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Metadata',
+            description: 'Additional metadata about the crawled page'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['url'],
+    title: 'CrawlResult',
+    description: `Individual page result from site crawling.
+
+Represents a single crawled page with its URL and extracted content.`
+} as const;
+
+export const ExtractRequestSchema = {
+    properties: {
+        urls: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                }
+            ],
+            title: 'Urls',
+            description: 'Single URL or list of URLs to extract content from'
+        }
+    },
+    additionalProperties: false,
+    type: 'object',
+    required: ['urls'],
+    title: 'ExtractRequest',
+    description: `Request schema for Tavily URL content extraction.
+
+Supports both single URL and batch URL extraction. The urls field
+accepts either a single URL string or a list of URL strings.`
+} as const;
+
+export const ExtractResponseSchema = {
+    properties: {
+        results: {
+            items: {
+                '$ref': '#/components/schemas/ExtractResult'
+            },
+            type: 'array',
+            title: 'Results',
+            description: 'List of extraction results for each URL'
+        },
+        failed_results: {
+            items: {
+                additionalProperties: true,
+                type: 'object'
+            },
+            type: 'array',
+            title: 'Failed Results',
+            description: 'List of URLs that failed to extract with error details'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    title: 'ExtractResponse',
+    description: `Response schema for Tavily URL content extraction.
+
+Contains the extraction results for all requested URLs.`
+} as const;
+
+export const ExtractResultSchema = {
+    properties: {
+        url: {
+            type: 'string',
+            title: 'Url',
+            description: 'Source URL that was extracted'
+        },
+        raw_content: {
+            type: 'string',
+            title: 'Raw Content',
+            description: 'Extracted text content from the page'
+        },
+        images: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Images',
+            description: 'List of image URLs found on the page'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['url', 'raw_content'],
+    title: 'ExtractResult',
+    description: `Extraction result for a single URL.
+
+Contains the extracted content from a URL including text and images.`
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -182,6 +423,119 @@ export const ItemsPublicSchema = {
     title: 'ItemsPublic'
 } as const;
 
+export const MapRequestSchema = {
+    properties: {
+        url: {
+            type: 'string',
+            title: 'Url',
+            description: 'Starting URL for mapping'
+        },
+        max_depth: {
+            type: 'integer',
+            minimum: 0,
+            title: 'Max Depth',
+            description: 'Maximum link depth to discover from starting URL',
+            default: 1
+        },
+        max_breadth: {
+            type: 'integer',
+            minimum: 1,
+            title: 'Max Breadth',
+            description: 'Maximum number of links to follow per page',
+            default: 20
+        },
+        limit: {
+            type: 'integer',
+            minimum: 1,
+            title: 'Limit',
+            description: 'Maximum total number of URLs to discover',
+            default: 100
+        },
+        instructions: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 1000
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Instructions',
+            description: 'Natural language instructions for URL selection'
+        },
+        select_paths: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Select Paths',
+            description: "URL path patterns to include (e.g., ['/products/', '/docs/'])"
+        },
+        select_domains: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Select Domains',
+            description: 'Additional domains to include in mapping'
+        }
+    },
+    additionalProperties: false,
+    type: 'object',
+    required: ['url'],
+    title: 'MapRequest',
+    description: `Request schema for Tavily URL mapping (sitemap generation).
+
+Contains parameters for discovering URLs from a website without
+extracting content. Useful for understanding site structure.`
+} as const;
+
+export const MapResponseSchema = {
+    properties: {
+        base_url: {
+            type: 'string',
+            title: 'Base Url',
+            description: 'The starting URL for mapping'
+        },
+        urls: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Urls',
+            description: 'List of discovered URL strings'
+        },
+        total_urls: {
+            type: 'integer',
+            title: 'Total Urls',
+            description: 'Total number of URLs discovered',
+            default: 0
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['base_url'],
+    title: 'MapResponse',
+    description: `Response schema for Tavily URL mapping.
+
+Contains the base URL, list of discovered URLs, and total count.`
+} as const;
+
 export const MessageSchema = {
     properties: {
         message: {
@@ -235,6 +589,240 @@ export const PrivateUserCreateSchema = {
     type: 'object',
     required: ['email', 'password', 'full_name'],
     title: 'PrivateUserCreate'
+} as const;
+
+export const SearchDepthSchema = {
+    type: 'string',
+    enum: ['basic', 'advanced'],
+    title: 'SearchDepth',
+    description: `Search depth options for Tavily web search.
+
+Attributes:
+    BASIC: Standard search, faster response time.
+    ADVANCED: Comprehensive search with more detailed results.`
+} as const;
+
+export const SearchImageSchema = {
+    properties: {
+        url: {
+            type: 'string',
+            title: 'Url',
+            description: 'URL of the image'
+        },
+        description: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Description',
+            description: 'Description of the image (if include_image_descriptions=True)'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['url'],
+    title: 'SearchImage',
+    description: `Image result from Tavily search.
+
+Represents an image found during search with URL and optional description.`
+} as const;
+
+export const SearchRequestSchema = {
+    properties: {
+        query: {
+            type: 'string',
+            maxLength: 1000,
+            minLength: 1,
+            title: 'Query',
+            description: 'Search query string'
+        },
+        search_depth: {
+            '$ref': '#/components/schemas/SearchDepth',
+            description: 'Search depth - basic for faster results, advanced for comprehensive',
+            default: 'basic'
+        },
+        topic: {
+            '$ref': '#/components/schemas/SearchTopic',
+            description: 'Topic category - general for web content, news for recent articles',
+            default: 'general'
+        },
+        max_results: {
+            type: 'integer',
+            maximum: 20,
+            minimum: 1,
+            title: 'Max Results',
+            description: 'Maximum number of results to return (1-20)',
+            default: 5
+        },
+        include_images: {
+            type: 'boolean',
+            title: 'Include Images',
+            description: 'Include relevant images in search results',
+            default: false
+        },
+        include_image_descriptions: {
+            type: 'boolean',
+            title: 'Include Image Descriptions',
+            description: 'Include descriptions for images (requires include_images=True)',
+            default: false
+        },
+        include_answer: {
+            type: 'boolean',
+            title: 'Include Answer',
+            description: 'Include AI-generated answer summary',
+            default: false
+        },
+        include_raw_content: {
+            type: 'boolean',
+            title: 'Include Raw Content',
+            description: 'Include raw HTML content of result pages',
+            default: false
+        },
+        include_domains: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Include Domains',
+            description: "List of domains to restrict search to (e.g., ['example.com'])"
+        },
+        exclude_domains: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Exclude Domains',
+            description: "List of domains to exclude from search (e.g., ['pinterest.com'])"
+        }
+    },
+    additionalProperties: false,
+    type: 'object',
+    required: ['query'],
+    title: 'SearchRequest',
+    description: `Request schema for Tavily web search.
+
+Contains all parameters for performing a web search including query,
+depth settings, result filtering, and content inclusion options.`
+} as const;
+
+export const SearchResponseSchema = {
+    properties: {
+        query: {
+            type: 'string',
+            title: 'Query',
+            description: 'The original search query'
+        },
+        results: {
+            items: {
+                '$ref': '#/components/schemas/SearchResult'
+            },
+            type: 'array',
+            title: 'Results',
+            description: 'List of search results'
+        },
+        answer: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Answer',
+            description: 'AI-generated answer summary (if include_answer=True)'
+        },
+        images: {
+            items: {
+                '$ref': '#/components/schemas/SearchImage'
+            },
+            type: 'array',
+            title: 'Images',
+            description: 'List of relevant images (if include_images=True)'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['query'],
+    title: 'SearchResponse',
+    description: `Response schema for Tavily web search.
+
+Contains the original query, list of search results, and optional
+AI-generated answer and images based on request parameters.`
+} as const;
+
+export const SearchResultSchema = {
+    properties: {
+        url: {
+            type: 'string',
+            title: 'Url',
+            description: 'URL of the search result page'
+        },
+        title: {
+            type: 'string',
+            title: 'Title',
+            description: 'Title of the search result page'
+        },
+        content: {
+            type: 'string',
+            title: 'Content',
+            description: 'Snippet or summary of the page content'
+        },
+        score: {
+            type: 'number',
+            title: 'Score',
+            description: 'Relevance score for this result'
+        },
+        raw_content: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Raw Content',
+            description: 'Raw HTML content of the page (if include_raw_content=True)'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['url', 'title', 'content', 'score'],
+    title: 'SearchResult',
+    description: `Individual search result from Tavily web search.
+
+Represents a single search result with URL, title, content snippet,
+and optional additional fields based on search parameters.`
+} as const;
+
+export const SearchTopicSchema = {
+    type: 'string',
+    enum: ['general', 'news'],
+    title: 'SearchTopic',
+    description: `Search topic categories for Tavily web search.
+
+Attributes:
+    GENERAL: General web content search.
+    NEWS: News-focused search for recent articles and updates.`
 } as const;
 
 export const TokenSchema = {
