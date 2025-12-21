@@ -4,7 +4,7 @@
 **Sessions**: 6
 **Estimated Duration**: 12-24 hours
 
-**Progress**: 4/6 sessions (67%)
+**Progress**: 5/6 sessions (83%)
 
 ---
 
@@ -24,7 +24,7 @@ The frontend follows the existing boilerplate patterns: TanStack Router for rout
 | 02 | Search Form and Query | Complete | 22 | 2025-12-21 |
 | 03 | Search Results Display | Complete | 22 | 2025-12-21 |
 | 04 | Extract Page | Complete | 22 | 2025-12-22 |
-| 05 | Crawl Page | Not Started | ~25 | - |
+| 05 | Crawl Page | Complete | 22 | 2025-12-22 |
 | 06 | Map Page and Polish | Not Started | ~20 | - |
 
 ---
@@ -51,11 +51,16 @@ The frontend follows the existing boilerplate patterns: TanStack Router for rout
 - **Tasks**: 22/22
 - **Deliverables**: ExtractForm, ExtractResultCard, ExtractResultsList, ExtractSkeleton, ExtractEmptyState, useExtract hook, Zod schema
 
+### Session 05: Crawl Page
+- **Completed**: 2025-12-22
+- **Tasks**: 22/22
+- **Deliverables**: CrawlForm, CrawlResultCard, CrawlResultsList, CrawlSkeleton, CrawlEmptyState, CrawlMetadata, useCrawl hook, Zod schema
+
 ---
 
 ## Upcoming Sessions
 
-- Session 05: Crawl Page
+- Session 06: Map Page and Polish
 
 ---
 
