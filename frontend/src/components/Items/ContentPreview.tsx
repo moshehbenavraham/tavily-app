@@ -37,6 +37,7 @@ export function ContentPreview({
       </div>
       {isLong && (
         <Button
+          type="button"
           variant="ghost"
           size="sm"
           onClick={() => setIsExpanded(!isExpanded)}

@@ -6,6 +6,16 @@ import type {
 } from "@/client/types.gen"
 
 /**
+ * Sanitize string to remove invalid Unicode surrogate characters
+ * These can cause encoding errors when sent to the backend
+ */
+function sanitizeString(str: string): string {
+  // Remove lone surrogate pairs that cause UTF-8 encoding errors
+  // Surrogates are in range \uD800-\uDFFF and should only appear in valid pairs
+  return str.replace(/[\uD800-\uDFFF]/g, "")
+}
+
+/**
  * Extract domain from URL safely
  */
 function extractDomain(url: string): string {
@@ -37,11 +47,12 @@ export function mapSearchResultToItem(
   result: SearchResult,
   query: string,
 ): ItemCreate {
+  const content = sanitizeString(result.raw_content || result.content)
   return {
-    title: result.title,
-    description: result.content.slice(0, 500),
+    title: sanitizeString(result.title).slice(0, 255),
+    description: sanitizeString(result.content).slice(0, 255),
     source_url: result.url,
-    content: result.raw_content || result.content,
+    content: content,
     content_type: "search",
     item_metadata: {
       score: result.score,
@@ -57,17 +68,18 @@ export function mapSearchResultToItem(
  */
 export function mapExtractResultToItem(result: ExtractResult): ItemCreate {
   const domain = extractDomain(result.url)
+  const rawContent = sanitizeString(result.raw_content || "")
 
   return {
-    title: `Extracted: ${domain}`,
-    description: result.raw_content.slice(0, 500),
+    title: `Extracted: ${domain}`.slice(0, 255),
+    description: rawContent.slice(0, 255),
     source_url: result.url,
-    content: result.raw_content,
+    content: rawContent,
     content_type: "extract",
     item_metadata: {
       domain,
       images: result.images || [],
-      char_count: result.raw_content.length,
+      char_count: rawContent.length,
     },
   }
 }
@@ -82,11 +94,11 @@ export function mapCrawlResultToItem(
   index: number,
 ): ItemCreate {
   const path = extractPath(result.url)
-  const content = result.raw_content || ""
+  const content = sanitizeString(result.raw_content || "")
 
   return {
-    title: `Crawled: ${path}`,
-    description: content.slice(0, 500) || "No content extracted",
+    title: `Crawled: ${path}`.slice(0, 255),
+    description: content.slice(0, 255) || "No content extracted",
     source_url: result.url,
     content: content,
     content_type: "crawl",
@@ -110,8 +122,8 @@ export function mapMapResultsToItem(
   const domain = extractDomain(baseUrl)
 
   return {
-    title: `Site Map: ${domain}`,
-    description: `${urls.length} URLs discovered from ${domain}`,
+    title: `Site Map: ${domain}`.slice(0, 255),
+    description: `${urls.length} URLs discovered from ${domain}`.slice(0, 255),
     source_url: baseUrl,
     content: JSON.stringify(urls, null, 2),
     content_type: "map",
