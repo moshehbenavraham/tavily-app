@@ -2,7 +2,7 @@
   "version": "2.0",
   "project_name": "tavily-app",
   "description": "AI-powered search application using Tavily API",
-  "current_phase": 1,
+  "current_phase": 2,
   "current_session": null,
   "phases": {
     "0": {
@@ -16,6 +16,12 @@
       "description": "React frontend with Tavily search, extract, crawl, and map pages using TanStack Router/Query, React Hook Form, and shadcn/ui",
       "status": "complete",
       "session_count": 6
+    },
+    "2": {
+      "name": "Saving Results to Items",
+      "description": "Extend Item model, create migration, implement save hooks and buttons, enhance Items page with type badges and filtering",
+      "status": "in_progress",
+      "session_count": 3
     }
   },
   "completed_sessions": [
@@ -30,7 +36,8 @@
     "phase01-session03-search-results-display",
     "phase01-session04-extract-page",
     "phase01-session05-crawl-page",
-    "phase01-session06-map-page-and-polish"
+    "phase01-session06-map-page-and-polish",
+    "phase02-session01-backend-model-and-migration"
   ],
   "next_session_history": [
     {
@@ -91,6 +98,11 @@
     {
       "date": "2025-12-22",
       "session": "phase01-session06-map-page-and-polish",
+      "status": "completed"
+    },
+    {
+      "date": "2025-12-22",
+      "session": "phase02-session01-backend-model-and-migration",
       "status": "completed"
     }
   ]

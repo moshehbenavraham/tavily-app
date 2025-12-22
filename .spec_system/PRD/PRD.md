@@ -41,6 +41,7 @@ The application builds on an existing FastAPI full-stack boilerplate (React 19, 
 4. Generate a sitemap of URLs discovered from a starting point
 5. View and manage search history for authenticated users
 6. Browse search results with rich display of titles, snippets, and source links
+7. Save Tavily results (search, extract, crawl, map) to Items for later reference
 
 ## Requirements
 
@@ -77,6 +78,19 @@ The application builds on an existing FastAPI full-stack boilerplate (React 19, 
 - Add topic filter (general/news/finance) and search depth options
 - Create URL input components with validation for extract/crawl/map
 
+### MVP Requirements - Saving Results (Phase 02)
+
+- Extend Item model with content fields (source_url, content, content_type, metadata)
+- Generate Alembic migration for new Item fields
+- Regenerate frontend API client with updated schemas
+- Create useSaveToItems hook for TanStack Query mutations
+- Create mapper functions to convert Tavily results to Item format
+- Add Save buttons to SearchResultCard and SearchResultDetail components
+- Add Save buttons to ExtractResultCard and CrawlResultCard components
+- Add Save All button to MapResultsList component
+- Update Items table columns to display new fields (type badge, source link)
+- Add content_type filter to Items page
+
 ### Deferred Requirements
 
 - SearchHistory database model for tracking user queries
@@ -108,7 +122,8 @@ This system delivers the product via phases. Each phase is implemented via multi
 | Phase | Name | Sessions | Status |
 |-------|------|----------|--------|
 | 00 | Core Setup | 6 | Complete |
-| 01 | Frontend Integration | 6 | Not Started |
+| 01 | Frontend Integration | 6 | Complete |
+| 02 | Saving Results to Items | 3 | Not Started |
 
 ## Phase 00: Core Setup
 
@@ -158,6 +173,46 @@ Session specifications in `.spec_system/PRD/phase_00/`.
 
 Session specifications in `.spec_system/PRD/phase_01/`.
 
+## Phase 02: Saving Results to Items
+
+### Objectives
+
+1. Extend Item database model with content fields for storing Tavily results
+2. Create database migration and update API schemas
+3. Implement frontend save functionality with hooks and mapper utilities
+4. Add Save buttons to all Tavily result components
+5. Enhance Items page to display and filter saved Tavily results
+
+### Sessions
+
+| Session | Name | Est. Tasks |
+|---------|------|------------|
+| 01 | Backend Model and Migration | ~20 |
+| 02 | Frontend Hooks and Save Buttons | ~25 |
+| 03 | Items Page Enhancements | ~20 |
+
+Session specifications in `.spec_system/PRD/phase_02/`.
+
+### Data Model
+
+New fields added to ItemBase:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| source_url | str (max 2048) | Original URL of the content |
+| content | Text | Full content without length limit |
+| content_type | str (max 50) | Type: "search", "extract", "crawl", or "map" |
+| metadata | JSON | Additional data (score, query, images, etc.) |
+
+### Field Mapping by Tavily Type
+
+| Tavily Type | title | description | source_url | content | content_type | metadata |
+|-------------|-------|-------------|------------|---------|--------------|----------|
+| **Search** | result.title | truncate(content, 255) | result.url | raw_content | "search" | {score, query} |
+| **Extract** | domain from URL | "Extracted from {url}" | result.url | raw_content | "extract" | {images} |
+| **Crawl** | page path | "Crawled from {base_url}" | result.url | raw_content | "crawl" | {base_url, index} |
+| **Map** | domain | "{count} URLs from {base_url}" | base_url | JSON of urls | "map" | {total_urls} |
+
 ## Technical Stack
 
 ### Backend
@@ -190,14 +245,23 @@ Session specifications in `.spec_system/PRD/phase_01/`.
 - [x] Integration tests pass with valid API key
 - [x] No lint errors or type check failures
 
-### Phase 01 (Frontend)
-- [ ] All Tavily features accessible via navigation sidebar
-- [ ] Search form validates input and displays results
-- [ ] Extract, crawl, and map pages are functional
-- [ ] Loading states shown during API calls
-- [ ] Errors displayed via toast notifications
-- [ ] UI is responsive on desktop and mobile
-- [ ] All new components follow existing code patterns
+### Phase 01 (Frontend) - COMPLETE
+- [x] All Tavily features accessible via navigation sidebar
+- [x] Search form validates input and displays results
+- [x] Extract, crawl, and map pages are functional
+- [x] Loading states shown during API calls
+- [x] Errors displayed via toast notifications
+- [x] UI is responsive on desktop and mobile
+- [x] All new components follow existing code patterns
+
+### Phase 02 (Saving Results)
+- [ ] Item model extended with source_url, content, content_type, metadata fields
+- [ ] Database migration applied successfully
+- [ ] Save buttons functional on all Tavily result components
+- [ ] Saved items appear in Items page with correct data
+- [ ] Items page displays type badges and source links
+- [ ] Content type filter works on Items page
+- [ ] Toast notifications confirm save success/failure
 
 ## Risks
 

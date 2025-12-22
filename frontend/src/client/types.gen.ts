@@ -150,11 +150,23 @@ export type HTTPValidationError = {
 export type ItemCreate = {
     title: string;
     description?: (string | null);
+    source_url?: (string | null);
+    content?: (string | null);
+    content_type?: ('search' | 'extract' | 'crawl' | 'map' | null);
+    item_metadata?: ({
+    [key: string]: unknown;
+} | null);
 };
 
 export type ItemPublic = {
     title: string;
     description?: (string | null);
+    source_url?: (string | null);
+    content?: (string | null);
+    content_type?: ('search' | 'extract' | 'crawl' | 'map' | null);
+    item_metadata?: ({
+    [key: string]: unknown;
+} | null);
     id: string;
     owner_id: string;
 };
@@ -167,6 +179,12 @@ export type ItemsPublic = {
 export type ItemUpdate = {
     title?: (string | null);
     description?: (string | null);
+    source_url?: (string | null);
+    content?: (string | null);
+    content_type?: ('search' | 'extract' | 'crawl' | 'map' | null);
+    item_metadata?: ({
+    [key: string]: unknown;
+} | null);
 };
 
 /**

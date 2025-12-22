@@ -329,6 +329,53 @@ export const ItemCreateSchema = {
                 }
             ],
             title: 'Description'
+        },
+        source_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Source Url'
+        },
+        content: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Content'
+        },
+        content_type: {
+            anyOf: [
+                {
+                    type: 'string',
+                    enum: ['search', 'extract', 'crawl', 'map']
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Content Type'
+        },
+        item_metadata: {
+            anyOf: [
+                {
+                    additionalProperties: true,
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Item Metadata'
         }
     },
     type: 'object',
@@ -355,6 +402,53 @@ export const ItemPublicSchema = {
                 }
             ],
             title: 'Description'
+        },
+        source_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Source Url'
+        },
+        content: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Content'
+        },
+        content_type: {
+            anyOf: [
+                {
+                    type: 'string',
+                    enum: ['search', 'extract', 'crawl', 'map']
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Content Type'
+        },
+        item_metadata: {
+            anyOf: [
+                {
+                    additionalProperties: true,
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Item Metadata'
         },
         id: {
             type: 'string',
@@ -398,6 +492,53 @@ export const ItemUpdateSchema = {
                 }
             ],
             title: 'Description'
+        },
+        source_url: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 2048
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Source Url'
+        },
+        content: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Content'
+        },
+        content_type: {
+            anyOf: [
+                {
+                    type: 'string',
+                    enum: ['search', 'extract', 'crawl', 'map']
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Content Type'
+        },
+        item_metadata: {
+            anyOf: [
+                {
+                    additionalProperties: true,
+                    type: 'object'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Item Metadata'
         }
     },
     type: 'object',

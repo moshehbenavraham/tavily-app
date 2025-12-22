@@ -1,14 +1,10 @@
-<svg width="200" height="40" viewBox="0 0 200 40" xmlns="http://www.w3.org/2000/svg">
+<svg width="210" height="40" viewBox="0 0 210 40" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" style="stop-color:#818cf8"/>
-      <stop offset="100%" style="stop-color:#a78bfa"/>
+    <linearGradient id="forest-bright" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4a9070"/>
+      <stop offset="100%" stop-color="#5fa882"/>
     </linearGradient>
   </defs>
-  <text x="0" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="url(#gradient-light)">
-    AIwithApex
-  </text>
-  <text x="142" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="400" fill="#e5e7eb">
-    .com
-  </text>
+  <text x="0" y="29" font-family="'Playfair Display', Georgia, serif" font-size="26" font-weight="600" fill="url(#forest-bright)">AIwithApex</text>
+  <text x="150" y="29" font-family="'Outfit', system-ui, sans-serif" font-size="22" font-weight="400" fill="#ebe7df">.com</text>
 </svg>

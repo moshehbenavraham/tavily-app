@@ -1,7 +1,12 @@
 import uuid
+from typing import Any, Literal
 
 from pydantic import EmailStr
+from sqlalchemy import JSON, String, Text
 from sqlmodel import Field, Relationship, SQLModel
+
+# Content type for Tavily results - validated at Pydantic level, stored as string in DB
+ContentType = Literal["search", "extract", "crawl", "map"]
 
 
 # Shared properties
@@ -60,6 +65,11 @@ class UsersPublic(SQLModel):
 class ItemBase(SQLModel):
     title: str = Field(min_length=1, max_length=255)
     description: str | None = Field(default=None, max_length=255)
+    # Tavily result fields - all optional for backward compatibility
+    source_url: str | None = Field(default=None, max_length=2048)
+    content: str | None = Field(default=None, sa_type=Text)
+    content_type: ContentType | None = Field(default=None, sa_type=String(50))
+    item_metadata: dict[str, Any] | None = Field(default=None, sa_type=JSON)
 
 
 # Properties to receive on item creation
