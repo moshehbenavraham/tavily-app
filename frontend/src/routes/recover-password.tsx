@@ -42,7 +42,7 @@ export const Route = createFileRoute("/recover-password")({
   head: () => ({
     meta: [
       {
-        title: "Recover Password - FastAPI Cloud",
+        title: "Recover Password - AIwithApex.com",
       },
     ],
   }),
@@ -82,13 +82,20 @@ function RecoverPassword() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-8"
         >
-          <div className="flex flex-col items-center gap-2 text-center">
-            <h1 className="text-2xl font-bold">Password Recovery</h1>
+          {/* Header with display typography */}
+          <div className="flex flex-col items-center gap-3 text-center">
+            <h1 className="font-display text-[28px] font-semibold tracking-tight text-foreground">
+              Forgot password?
+            </h1>
+            <p className="font-body text-[15px] text-muted-foreground max-w-[280px]">
+              Enter your email and we'll send you a link to reset your password
+            </p>
           </div>
 
-          <div className="grid gap-4">
+          {/* Form fields */}
+          <div className="grid gap-5">
             <FormField
               control={form.control}
               name="email"
@@ -110,17 +117,25 @@ function RecoverPassword() {
 
             <LoadingButton
               type="submit"
-              className="w-full"
+              className="w-full mt-2"
               loading={mutation.isPending}
             >
-              Continue
+              Send Reset Link
             </LoadingButton>
           </div>
 
-          <div className="text-center text-sm">
+          {/* Footer link */}
+          <div className="text-center font-body text-[14px] text-muted-foreground">
             Remember your password?{" "}
-            <RouterLink to="/login" className="underline underline-offset-4">
-              Log in
+            <RouterLink
+              to="/login"
+              className={`
+                font-medium text-foreground
+                transition-colors duration-200
+                hover:text-primary
+              `}
+            >
+              Sign in
             </RouterLink>
           </div>
         </form>

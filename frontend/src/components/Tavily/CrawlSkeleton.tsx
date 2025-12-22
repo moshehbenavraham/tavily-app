@@ -1,50 +1,71 @@
-import { Loader2 } from "lucide-react"
+import { Globe, Loader2 } from "lucide-react"
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
 interface CrawlSkeletonProps {
   count?: number
 }
 
-/**
- * Skeleton loading component for crawl results.
- * Displays a prominent loading indicator since crawls can take 30-150 seconds.
- */
 export function CrawlSkeleton({ count = 3 }: CrawlSkeletonProps) {
   return (
     <div className="space-y-6">
-      {/* Prominent loading message for long-running operation */}
-      <div className="flex items-center gap-3 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/30">
-        <Loader2 className="h-5 w-5 animate-spin text-blue-600 dark:text-blue-400" />
-        <div className="flex-1">
-          <p className="font-medium text-blue-900 dark:text-blue-100">
-            Crawling website...
-          </p>
-          <p className="text-sm text-blue-700 dark:text-blue-300">
-            This may take up to 2 minutes depending on depth and breadth
-            settings.
-          </p>
+      {/* Loading indicator with progress message */}
+      <div className="relative overflow-hidden rounded-xl border border-info/20 bg-info/5 p-5">
+        <div className="absolute left-0 top-0 h-full w-1 bg-info" />
+        <div className="flex items-start gap-4">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-info/10">
+            <Loader2 className="h-5 w-5 animate-spin text-info" />
+          </div>
+          <div>
+            <h4 className="font-body text-sm font-semibold text-foreground">
+              Crawling website...
+            </h4>
+            <p className="mt-1 text-body-sm text-muted-foreground">
+              This may take up to 2 minutes depending on your depth and breadth
+              settings.
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Skeleton cards */}
       <div className="space-y-4">
         {Array.from({ length: count }).map((_, index) => (
-          <Card key={index}>
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <Skeleton className="h-4 w-2/3" />
-                <Skeleton className="h-5 w-16" />
+          <div
+            key={index}
+            className="relative overflow-hidden rounded-xl border border-border bg-card p-5"
+            style={{ animationDelay: `${index * 75}ms` }}
+          >
+            {/* Left accent */}
+            <div className="absolute left-0 top-0 h-full w-1">
+              <Skeleton className="h-full w-full" />
+            </div>
+
+            {/* Header */}
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex items-start gap-3">
+                <Skeleton className="h-8 w-8 rounded-lg" />
+                <div className="flex items-center gap-2">
+                  <Globe className="h-3.5 w-3.5 text-muted" />
+                  <Skeleton className="h-3.5 w-32" />
+                </div>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6" />
-              <Skeleton className="h-4 w-3/4" />
-            </CardContent>
-          </Card>
+              <Skeleton className="h-5 w-16 rounded-full" />
+            </div>
+
+            {/* Content */}
+            <div className="mt-4 space-y-2 rounded-lg bg-surface-1 p-4">
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-full" />
+              <Skeleton className="h-3 w-11/12" />
+            </div>
+
+            {/* Actions */}
+            <div className="mt-4 flex items-center gap-2">
+              <Skeleton className="h-8 w-20 rounded-lg" />
+              <Skeleton className="h-8 w-16 rounded-lg" />
+            </div>
+          </div>
         ))}
       </div>
     </div>

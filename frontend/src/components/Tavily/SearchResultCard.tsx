@@ -1,15 +1,8 @@
-import { ExternalLink, Globe } from "lucide-react"
+import { ArrowUpRight, ExternalLink, Globe } from "lucide-react"
 
 import type { SearchResult } from "@/client/types.gen"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
 import { cn } from "@/lib/utils"
 
 interface SearchResultCardProps {
@@ -18,72 +11,37 @@ interface SearchResultCardProps {
 }
 
 /**
- * Truncate URL to show domain and partial path.
- * Preserves protocol and domain, truncates path to ~50 chars total.
+ * Extract domain from URL for display
  */
-function truncateUrl(url: string, maxLength = 50): string {
-  if (url.length <= maxLength) {
-    return url
-  }
-
+function extractDomain(url: string): string {
   try {
     const parsed = new URL(url)
-    const domain = parsed.hostname
-    const path = parsed.pathname + parsed.search
-
-    // Always show domain
-    if (domain.length >= maxLength - 3) {
-      return `${domain.slice(0, maxLength - 3)}...`
-    }
-
-    const remainingLength = maxLength - domain.length - 3
-    if (path.length > remainingLength) {
-      return `${domain + path.slice(0, remainingLength)}...`
-    }
-
-    return domain + path
+    return parsed.hostname.replace(/^www\./, "")
   } catch {
-    // Fallback for invalid URLs
-    return `${url.slice(0, maxLength - 3)}...`
+    return url.slice(0, 30)
   }
 }
 
 /**
- * Get badge styling based on relevance score.
- * Green >= 0.7, Yellow >= 0.4, Red < 0.4
+ * Get badge variant based on relevance score
  */
-function getScoreBadgeStyle(score: number): string {
-  if (score >= 0.7) {
-    return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800"
-  }
-  if (score >= 0.4) {
-    return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-400 dark:border-yellow-800"
-  }
-  return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800"
+function getScoreVariant(score: number): "success" | "warning" | "destructive" {
+  if (score >= 0.7) return "success"
+  if (score >= 0.4) return "warning"
+  return "destructive"
 }
 
 /**
- * Truncate title to prevent overflow
+ * Truncate text with ellipsis
  */
-function truncateTitle(title: string, maxLength = 60): string {
-  if (title.length <= maxLength) {
-    return title
-  }
-  return `${title.slice(0, maxLength - 3)}...`
-}
-
-/**
- * Truncate content snippet
- */
-function truncateContent(content: string, maxLength = 150): string {
-  if (content.length <= maxLength) {
-    return content
-  }
-  return `${content.slice(0, maxLength - 3)}...`
+function truncate(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text
+  return `${text.slice(0, maxLength - 1)}…`
 }
 
 export function SearchResultCard({ result, onClick }: SearchResultCardProps) {
   const scorePercent = Math.round(result.score * 100)
+  const domain = extractDomain(result.url)
 
   const handleOpenUrl = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -91,9 +49,12 @@ export function SearchResultCard({ result, onClick }: SearchResultCardProps) {
   }
 
   return (
-    <Card
+    <article
       className={cn(
-        "cursor-pointer py-4 transition-colors hover:bg-accent/50",
+        "group relative rounded-xl border border-border bg-card p-5",
+        "cursor-pointer transition-all duration-200",
+        "hover:border-border-strong hover:bg-surface-1 hover:shadow-luxury-sm",
+        "hover:-translate-y-0.5",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
       )}
       onClick={onClick}
@@ -103,39 +64,49 @@ export function SearchResultCard({ result, onClick }: SearchResultCardProps) {
           onClick?.()
         }
       }}
-      tabIndex={0}
-      role="button"
       aria-label={`View details for ${result.title}`}
     >
-      <CardHeader className="pb-2">
-        <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-base leading-tight">
-            {truncateTitle(result.title)}
-          </CardTitle>
-          <Badge className={cn("shrink-0", getScoreBadgeStyle(result.score))}>
-            {scorePercent}%
-          </Badge>
+      {/* Header Row */}
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="min-w-0 flex-1">
+          <h3 className="font-body text-[15px] font-semibold leading-snug text-foreground group-hover:text-primary transition-colors duration-200">
+            {truncate(result.title, 70)}
+          </h3>
+          <div className="mt-1.5 flex items-center gap-1.5 text-muted-foreground">
+            <Globe className="h-3.5 w-3.5 shrink-0" />
+            <span className="font-mono text-xs tracking-tight">{domain}</span>
+          </div>
         </div>
-        <CardDescription className="flex items-center gap-1.5">
-          <Globe className="h-3 w-3 shrink-0" />
-          <span className="truncate text-xs">{truncateUrl(result.url)}</span>
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <p className="text-sm text-muted-foreground">
-          {truncateContent(result.content)}
-        </p>
+        <Badge
+          variant={getScoreVariant(result.score)}
+          className="shrink-0 font-mono text-xs tabular-nums"
+        >
+          {scorePercent}%
+        </Badge>
+      </div>
+
+      {/* Content Snippet */}
+      <p className="mb-4 text-body-sm leading-relaxed text-muted-foreground line-clamp-2">
+        {result.content}
+      </p>
+
+      {/* Footer */}
+      <div className="flex items-center justify-between">
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
           onClick={handleOpenUrl}
-          className="gap-1.5"
+          className="h-8 gap-1.5 px-3 text-xs font-medium text-muted-foreground hover:text-foreground"
         >
-          <ExternalLink className="h-3 w-3" />
-          Open URL
+          <ExternalLink className="h-3.5 w-3.5" />
+          Visit site
         </Button>
-      </CardContent>
-    </Card>
+        <div className="flex items-center gap-1 text-xs text-muted-foreground opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <span>View details</span>
+          <ArrowUpRight className="h-3.5 w-3.5" />
+        </div>
+      </div>
+    </article>
   )
 }
 

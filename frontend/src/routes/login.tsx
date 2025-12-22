@@ -44,7 +44,7 @@ export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
       {
-        title: "Log In - FastAPI Cloud",
+        title: "Log In - AIwithApex.com",
       },
     ],
   }),
@@ -72,13 +72,20 @@ function Login() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-8"
         >
-          <div className="flex flex-col items-center gap-2 text-center">
-            <h1 className="text-2xl font-bold">Login to your account</h1>
+          {/* Header with display typography */}
+          <div className="flex flex-col items-center gap-3 text-center">
+            <h1 className="font-display text-[28px] font-semibold tracking-tight text-foreground">
+              Welcome back
+            </h1>
+            <p className="font-body text-[15px] text-muted-foreground">
+              Sign in to continue to your account
+            </p>
           </div>
 
-          <div className="grid gap-4">
+          {/* Form fields */}
+          <div className="grid gap-5">
             <FormField
               control={form.control}
               name="username"
@@ -107,9 +114,13 @@ function Login() {
                     <FormLabel>Password</FormLabel>
                     <RouterLink
                       to="/recover-password"
-                      className="ml-auto text-sm underline-offset-4 hover:underline"
+                      className={`
+                        ml-auto font-body text-[13px] text-muted-foreground
+                        transition-colors duration-200
+                        hover:text-primary
+                      `}
                     >
-                      Forgot your password?
+                      Forgot password?
                     </RouterLink>
                   </div>
                   <FormControl>
@@ -124,15 +135,27 @@ function Login() {
               )}
             />
 
-            <LoadingButton type="submit" loading={loginMutation.isPending}>
-              Log In
+            <LoadingButton
+              type="submit"
+              loading={loginMutation.isPending}
+              className="mt-2"
+            >
+              Sign In
             </LoadingButton>
           </div>
 
-          <div className="text-center text-sm">
-            Don't have an account yet?{" "}
-            <RouterLink to="/signup" className="underline underline-offset-4">
-              Sign up
+          {/* Footer link */}
+          <div className="text-center font-body text-[14px] text-muted-foreground">
+            Don't have an account?{" "}
+            <RouterLink
+              to="/signup"
+              className={`
+                font-medium text-foreground
+                transition-colors duration-200
+                hover:text-primary
+              `}
+            >
+              Create account
             </RouterLink>
           </div>
         </form>

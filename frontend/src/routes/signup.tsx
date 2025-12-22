@@ -51,7 +51,7 @@ export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
       {
-        title: "Sign Up - FastAPI Cloud",
+        title: "Sign Up - AIwithApex.com",
       },
     ],
   }),
@@ -84,13 +84,20 @@ function SignUp() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-8"
         >
-          <div className="flex flex-col items-center gap-2 text-center">
-            <h1 className="text-2xl font-bold">Create an account</h1>
+          {/* Header with display typography */}
+          <div className="flex flex-col items-center gap-3 text-center">
+            <h1 className="font-display text-[28px] font-semibold tracking-tight text-foreground">
+              Create an account
+            </h1>
+            <p className="font-body text-[15px] text-muted-foreground">
+              Get started with your free account
+            </p>
           </div>
 
-          <div className="grid gap-4">
+          {/* Form fields */}
+          <div className="grid gap-5">
             <FormField
               control={form.control}
               name="full_name"
@@ -100,7 +107,7 @@ function SignUp() {
                   <FormControl>
                     <Input
                       data-testid="full-name-input"
-                      placeholder="User"
+                      placeholder="John Doe"
                       type="text"
                       {...field}
                     />
@@ -138,7 +145,7 @@ function SignUp() {
                   <FormControl>
                     <PasswordInput
                       data-testid="password-input"
-                      placeholder="Password"
+                      placeholder="Create a password"
                       {...field}
                     />
                   </FormControl>
@@ -156,7 +163,7 @@ function SignUp() {
                   <FormControl>
                     <PasswordInput
                       data-testid="confirm-password-input"
-                      placeholder="Confirm Password"
+                      placeholder="Confirm your password"
                       {...field}
                     />
                   </FormControl>
@@ -167,17 +174,25 @@ function SignUp() {
 
             <LoadingButton
               type="submit"
-              className="w-full"
+              className="w-full mt-2"
               loading={signUpMutation.isPending}
             >
-              Sign Up
+              Create Account
             </LoadingButton>
           </div>
 
-          <div className="text-center text-sm">
+          {/* Footer link */}
+          <div className="text-center font-body text-[14px] text-muted-foreground">
             Already have an account?{" "}
-            <RouterLink to="/login" className="underline underline-offset-4">
-              Log in
+            <RouterLink
+              to="/login"
+              className={`
+                font-medium text-foreground
+                transition-colors duration-200
+                hover:text-primary
+              `}
+            >
+              Sign in
             </RouterLink>
           </div>
         </form>

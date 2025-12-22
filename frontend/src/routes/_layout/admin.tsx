@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_layout/admin")({
   head: () => ({
     meta: [
       {
-        title: "Admin - FastAPI Cloud",
+        title: "Admin - AIwithApex.com",
       },
     ],
   }),

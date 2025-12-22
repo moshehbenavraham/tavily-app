@@ -1,7 +1,6 @@
-import { Clock, FileStack, Globe } from "lucide-react"
+import { Clock, ExternalLink, FileStack, Globe } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 
 interface CrawlMetadataProps {
   baseUrl: string
@@ -9,55 +8,82 @@ interface CrawlMetadataProps {
   responseTime?: number
 }
 
-/**
- * Metadata display for crawl results.
- * Shows base URL, total pages crawled, and optional response time.
- */
+function formatTime(ms: number): string {
+  if (ms < 1000) return `${ms}ms`
+  const seconds = (ms / 1000).toFixed(1)
+  return `${seconds}s`
+}
+
+function extractDomain(url: string): string {
+  try {
+    const parsed = new URL(url)
+    return parsed.hostname.replace(/^www\./, "")
+  } catch {
+    return url.slice(0, 30)
+  }
+}
+
 export function CrawlMetadata({
   baseUrl,
   totalPages,
   responseTime,
 }: CrawlMetadataProps) {
-  // Format response time for display
-  const formatTime = (ms: number): string => {
-    if (ms < 1000) return `${ms}ms`
-    const seconds = (ms / 1000).toFixed(1)
-    return `${seconds}s`
-  }
+  const domain = extractDomain(baseUrl)
 
   return (
-    <div className="flex flex-wrap items-center gap-4 rounded-lg border bg-muted/50 p-4">
+    <div className="flex flex-wrap items-center gap-4 rounded-xl border border-border bg-surface-1 p-4">
       {/* Base URL */}
-      <div className="flex items-center gap-2">
-        <Globe className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm text-muted-foreground">Base:</span>
-        <a
-          href={baseUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-medium text-primary hover:underline"
-        >
-          {baseUrl}
-        </a>
+      <div className="flex items-center gap-3">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10">
+          <Globe className="h-4 w-4 text-primary" />
+        </div>
+        <div className="flex flex-col">
+          <span className="text-caption text-muted-foreground">Base URL</span>
+          <a
+            href={baseUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 font-mono text-xs text-foreground transition-colors hover:text-primary"
+          >
+            {domain}
+            <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
       </div>
 
-      <Separator orientation="vertical" className="h-5 hidden sm:block" />
+      <div className="hidden h-8 w-px bg-border sm:block" />
 
       {/* Total pages */}
-      <div className="flex items-center gap-2">
-        <FileStack className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm text-muted-foreground">Pages:</span>
-        <Badge variant="secondary">{totalPages}</Badge>
+      <div className="flex items-center gap-3">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-success/10">
+          <FileStack className="h-4 w-4 text-success" />
+        </div>
+        <div className="flex flex-col">
+          <span className="text-caption text-muted-foreground">
+            Pages Crawled
+          </span>
+          <Badge variant="success" className="w-fit font-mono text-xs">
+            {totalPages}
+          </Badge>
+        </div>
       </div>
 
       {/* Response time (optional) */}
       {responseTime !== undefined && (
         <>
-          <Separator orientation="vertical" className="h-5 hidden sm:block" />
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">Time:</span>
-            <Badge variant="outline">{formatTime(responseTime)}</Badge>
+          <div className="hidden h-8 w-px bg-border sm:block" />
+          <div className="flex items-center gap-3">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/10">
+              <Clock className="h-4 w-4 text-accent-foreground" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-caption text-muted-foreground">
+                Response Time
+              </span>
+              <Badge variant="secondary" className="w-fit font-mono text-xs">
+                {formatTime(responseTime)}
+              </Badge>
+            </div>
           </div>
         </>
       )}

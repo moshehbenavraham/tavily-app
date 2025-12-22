@@ -1,6 +1,7 @@
-import { Check, Copy, ExternalLink } from "lucide-react"
+import { Check, Copy, ExternalLink, Link2 } from "lucide-react"
 import { toast } from "sonner"
 
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard"
 
@@ -8,10 +9,15 @@ interface MapResultsListProps {
   urls: string[]
 }
 
-/**
- * Displays a scrollable list of discovered URLs with copy functionality.
- * Each URL has a copy button, and there's a "Copy All" button for bulk copy.
- */
+function extractPath(url: string): string {
+  try {
+    const parsed = new URL(url)
+    return parsed.pathname || "/"
+  } catch {
+    return url
+  }
+}
+
 export function MapResultsList({ urls }: MapResultsListProps) {
   const [copiedText, copy] = useCopyToClipboard()
 
@@ -35,59 +41,82 @@ export function MapResultsList({ urls }: MapResultsListProps) {
   }
 
   return (
-    <div className="rounded-lg border">
-      {/* Header with Copy All button */}
-      <div className="flex items-center justify-between border-b bg-muted/30 px-4 py-3">
-        <span className="text-sm font-medium text-muted-foreground">
-          Discovered URLs
-        </span>
-        <Button variant="outline" size="sm" onClick={handleCopyAll}>
-          <Copy className="mr-2 h-3 w-3" />
+    <div className="space-y-4">
+      {/* Section header */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <Link2 className="h-4 w-4 text-primary" />
+          <h3 className="font-body text-sm font-semibold text-foreground">
+            Discovered URLs
+          </h3>
+          <Badge variant="secondary" className="font-mono text-xs">
+            {urls.length}
+          </Badge>
+        </div>
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={handleCopyAll}
+          className="h-8 gap-1.5 text-xs"
+        >
+          <Copy className="h-3.5 w-3.5" />
           Copy All
         </Button>
       </div>
 
-      {/* Scrollable URL list */}
-      <div className="max-h-96 overflow-y-auto">
-        <ul className="divide-y">
-          {urls.map((url, index) => (
-            <li
-              key={index}
-              className="flex items-center gap-2 px-4 py-2 hover:bg-muted/50"
-            >
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 truncate text-sm text-primary hover:underline"
-                title={url}
-              >
-                {url}
-              </a>
-              <a
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="shrink-0 text-muted-foreground hover:text-primary"
-                aria-label="Open URL in new tab"
-              >
-                <ExternalLink className="h-4 w-4" />
-              </a>
-              <button
-                type="button"
-                onClick={() => handleCopyUrl(url)}
-                className="shrink-0 text-muted-foreground hover:text-primary"
-                aria-label="Copy URL to clipboard"
-              >
-                {copiedText === url ? (
-                  <Check className="h-4 w-4 text-green-600" />
-                ) : (
-                  <Copy className="h-4 w-4" />
-                )}
-              </button>
-            </li>
-          ))}
-        </ul>
+      {/* URL list */}
+      <div className="overflow-hidden rounded-xl border border-border">
+        <div className="max-h-96 overflow-y-auto">
+          <ul className="divide-y divide-border">
+            {urls.map((url, index) => {
+              const path = extractPath(url)
+              const isCopied = copiedText === url
+
+              return (
+                <li
+                  key={index}
+                  className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-surface-1"
+                >
+                  <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-surface-2 font-mono text-[10px] text-muted-foreground">
+                    {index + 1}
+                  </span>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="min-w-0 flex-1 truncate font-mono text-xs text-foreground transition-colors hover:text-primary"
+                    title={url}
+                  >
+                    {path}
+                  </a>
+                  <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+                    <button
+                      type="button"
+                      onClick={() => handleCopyUrl(url)}
+                      className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-surface-2 hover:text-foreground"
+                      aria-label="Copy URL to clipboard"
+                    >
+                      {isCopied ? (
+                        <Check className="h-3.5 w-3.5 text-success" />
+                      ) : (
+                        <Copy className="h-3.5 w-3.5" />
+                      )}
+                    </button>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-surface-2 hover:text-foreground"
+                      aria-label="Open URL in new tab"
+                    >
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
       </div>
     </div>
   )

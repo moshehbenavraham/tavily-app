@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { Search } from "lucide-react"
 import { useState } from "react"
 
 import type { SearchResponse, SearchResult } from "@/client/types.gen"
@@ -45,17 +46,32 @@ function SearchPage() {
   const showSkeleton = mutation.isPending
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Web Search</h1>
-        <p className="text-muted-foreground">
-          Search the web using Tavily AI-powered search
+    <div className="flex flex-col gap-8">
+      {/* Page Header */}
+      <header className="page-enter space-y-3">
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
+            <Search className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <h1 className="font-display text-display-lg font-medium tracking-tight">
+              Web Search
+            </h1>
+          </div>
+        </div>
+        <p className="max-w-2xl text-body text-muted-foreground">
+          Search the web using Tavily's AI-powered search engine. Get relevant
+          results with optional AI-generated answers and images.
         </p>
-      </div>
+      </header>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Search Configuration</CardTitle>
+      {/* Search Configuration Card */}
+      <Card className="page-enter-child" variant="elevated">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-heading">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+            Search Configuration
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <SearchForm mutation={mutation} />
@@ -64,9 +80,12 @@ function SearchPage() {
 
       {/* Loading skeleton */}
       {showSkeleton && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Searching...</CardTitle>
+        <Card className="page-enter-child" variant="default">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-heading">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
+              Searching...
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <SearchSkeleton count={6} />
@@ -76,8 +95,8 @@ function SearchPage() {
 
       {/* Empty state */}
       {showEmptyState && (
-        <Card>
-          <CardContent className="pt-6">
+        <Card className="page-enter-child" variant="default">
+          <CardContent className="py-8">
             <SearchEmptyState query={searchResults.query} />
           </CardContent>
         </Card>
@@ -85,9 +104,12 @@ function SearchPage() {
 
       {/* Search results */}
       {hasResults && !mutation.isPending && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Search Results</CardTitle>
+        <Card className="page-enter-child" variant="elevated">
+          <CardHeader className="pb-4">
+            <CardTitle className="flex items-center gap-2 text-heading">
+              <span className="h-1.5 w-1.5 rounded-full bg-success" />
+              Search Results
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <SearchMetadata
@@ -95,6 +117,8 @@ function SearchPage() {
               resultCount={searchResults.results?.length ?? 0}
               answer={searchResults.answer}
             />
+
+            <div className="separator-elegant" />
 
             <SearchResultsList
               results={searchResults.results ?? []}
@@ -106,7 +130,9 @@ function SearchPage() {
 
       {/* Image results */}
       {hasImages && !mutation.isPending && (
-        <SearchImageGrid images={searchResults.images ?? []} />
+        <div className="page-enter-child">
+          <SearchImageGrid images={searchResults.images ?? []} />
+        </div>
       )}
 
       {/* Detail dialog */}

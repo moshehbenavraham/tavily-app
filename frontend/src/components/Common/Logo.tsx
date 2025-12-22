@@ -2,10 +2,10 @@ import { Link } from "@tanstack/react-router"
 
 import { useTheme } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
-import icon from "/assets/images/fastapi-icon.svg"
-import iconLight from "/assets/images/fastapi-icon-light.svg"
-import logo from "/assets/images/fastapi-logo.svg"
-import logoLight from "/assets/images/fastapi-logo-light.svg"
+import icon from "/assets/images/apex-icon.svg"
+import iconLight from "/assets/images/apex-icon-light.svg"
+import logo from "/assets/images/apex-logo.svg"
+import logoLight from "/assets/images/apex-logo-light.svg"
 
 interface LogoProps {
   variant?: "full" | "icon" | "responsive"
@@ -24,31 +24,43 @@ export function Logo({
   const fullLogo = isDark ? logoLight : logo
   const iconLogo = isDark ? iconLight : icon
 
+  const baseTransition = "transition-all duration-300 ease-out"
+  const hoverEffect = asLink
+    ? "hover:opacity-80 hover:scale-[1.02] active:scale-[0.98]"
+    : ""
+
   const content =
     variant === "responsive" ? (
-      <>
+      <div className={cn("relative", baseTransition, hoverEffect)}>
         <img
           src={fullLogo}
-          alt="FastAPI"
+          alt="AIwithApex.com"
           className={cn(
-            "h-6 w-auto group-data-[collapsible=icon]:hidden",
+            "h-7 w-auto group-data-[collapsible=icon]:hidden",
+            baseTransition,
             className,
           )}
         />
         <img
           src={iconLogo}
-          alt="FastAPI"
+          alt="AIwithApex.com"
           className={cn(
-            "size-5 hidden group-data-[collapsible=icon]:block",
+            "size-6 hidden group-data-[collapsible=icon]:block",
+            baseTransition,
             className,
           )}
         />
-      </>
+      </div>
     ) : (
       <img
         src={variant === "full" ? fullLogo : iconLogo}
-        alt="FastAPI"
-        className={cn(variant === "full" ? "h-6 w-auto" : "size-5", className)}
+        alt="AIwithApex.com"
+        className={cn(
+          variant === "full" ? "h-7 w-auto" : "size-6",
+          baseTransition,
+          hoverEffect,
+          className,
+        )}
       />
     )
 
@@ -56,5 +68,12 @@ export function Logo({
     return content
   }
 
-  return <Link to="/">{content}</Link>
+  return (
+    <Link
+      to="/"
+      className="inline-flex focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+    >
+      {content}
+    </Link>
+  )
 }

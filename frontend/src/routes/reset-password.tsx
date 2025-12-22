@@ -60,7 +60,7 @@ export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
       {
-        title: "Reset Password - FastAPI Cloud",
+        title: "Reset Password - AIwithApex.com",
       },
     ],
   }),
@@ -101,13 +101,20 @@ function ResetPassword() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-6"
+          className="flex flex-col gap-8"
         >
-          <div className="flex flex-col items-center gap-2 text-center">
-            <h1 className="text-2xl font-bold">Reset Password</h1>
+          {/* Header with display typography */}
+          <div className="flex flex-col items-center gap-3 text-center">
+            <h1 className="font-display text-[28px] font-semibold tracking-tight text-foreground">
+              Set new password
+            </h1>
+            <p className="font-body text-[15px] text-muted-foreground max-w-[280px]">
+              Choose a strong password to secure your account
+            </p>
           </div>
 
-          <div className="grid gap-4">
+          {/* Form fields */}
+          <div className="grid gap-5">
             <FormField
               control={form.control}
               name="new_password"
@@ -117,7 +124,7 @@ function ResetPassword() {
                   <FormControl>
                     <PasswordInput
                       data-testid="new-password-input"
-                      placeholder="New Password"
+                      placeholder="Enter new password"
                       {...field}
                     />
                   </FormControl>
@@ -135,7 +142,7 @@ function ResetPassword() {
                   <FormControl>
                     <PasswordInput
                       data-testid="confirm-password-input"
-                      placeholder="Confirm Password"
+                      placeholder="Confirm new password"
                       {...field}
                     />
                   </FormControl>
@@ -146,17 +153,25 @@ function ResetPassword() {
 
             <LoadingButton
               type="submit"
-              className="w-full"
+              className="w-full mt-2"
               loading={mutation.isPending}
             >
-              Reset Password
+              Update Password
             </LoadingButton>
           </div>
 
-          <div className="text-center text-sm">
+          {/* Footer link */}
+          <div className="text-center font-body text-[14px] text-muted-foreground">
             Remember your password?{" "}
-            <RouterLink to="/login" className="underline underline-offset-4">
-              Log in
+            <RouterLink
+              to="/login"
+              className={`
+                font-medium text-foreground
+                transition-colors duration-200
+                hover:text-primary
+              `}
+            >
+              Sign in
             </RouterLink>
           </div>
         </form>

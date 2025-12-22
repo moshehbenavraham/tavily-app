@@ -40,11 +40,11 @@ function Layout() {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-2 border-b px-4">
-          <SidebarTrigger className="-ml-1 text-muted-foreground" />
+        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center gap-2 border-b border-border/50 px-4 bg-background/80 backdrop-blur-sm">
+          <SidebarTrigger className="-ml-1 text-muted-foreground/60 hover:text-foreground transition-colors duration-200" />
         </header>
-        <main className="flex-1 p-6 md:p-8">
-          <div className="mx-auto max-w-7xl">
+        <main className="flex-1 p-6 md:p-10 lg:p-12">
+          <div className="mx-auto max-w-6xl page-enter">
             <Outlet />
           </div>
         </main>
