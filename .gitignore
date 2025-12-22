@@ -1,5 +1,6 @@
 .vscode
 node_modules/
+EXAMPLE/
 
 # Environment files (ignore all .env files except .example)
 .env
