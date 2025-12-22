@@ -6,20 +6,18 @@ services:
   # etc. To enable it, update .env, set:
   # DOMAIN=localhost.tiangolo.com
   proxy:
-    image: traefik:3.0
+    image: traefik:3.3
+    # Note: Docker provider disabled for local dev due to API version incompatibility
+    # Services are accessed directly via their exposed ports (backend:8008, frontend:5179, etc.)
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      # Docker socket not mounted - provider disabled
+      - /dev/null:/var/run/docker.sock:ro
     ports:
       - "80:80"
       - "8090:8080"
-    # Duplicate the command from docker-compose.yml to add --api.insecure=true
     command:
-      # Enable Docker in Traefik, so that it reads labels from Docker services
-      - --providers.docker
-      # Add a constraint to only use services with the label for this stack
-      - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
-      # Do not expose all Docker services, only the ones explicitly exposed
-      - --providers.docker.exposedbydefault=false
+      # Disable Docker provider for local development (API version compatibility issue)
+      # - --providers.docker
       # Create an entrypoint "http" listening on port 80
       - --entrypoints.http.address=:80
       # Create an entrypoint "https" listening on port 443
@@ -28,8 +26,8 @@ services:
       - --accesslog
       # Enable the Traefik log, for configurations and errors
       - --log
-      # Enable debug logging for local development
-      - --log.level=DEBUG
+      # Use INFO level for local development (DEBUG is too verbose)
+      - --log.level=INFO
       # Enable the Dashboard and API
       - --api
       # Enable the Dashboard and API in insecure mode for local development

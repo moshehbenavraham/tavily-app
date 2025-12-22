@@ -19,9 +19,15 @@ OpenAPI.TOKEN = async () => {
 }
 
 const handleApiError = (error: Error) => {
-  if (error instanceof ApiError && [401, 403].includes(error.status)) {
-    localStorage.removeItem("access_token")
-    window.location.href = "/login"
+  if (error instanceof ApiError) {
+    // Handle auth errors (401, 403) and user not found from /users/me (stale token)
+    const isAuthError = [401, 403].includes(error.status)
+    const isUserNotFound =
+      error.status === 404 && error.url.includes("/users/me")
+    if (isAuthError || isUserNotFound) {
+      localStorage.removeItem("access_token")
+      window.location.href = "/login"
+    }
   }
 }
 const queryClient = new QueryClient({
@@ -33,11 +39,18 @@ const queryClient = new QueryClient({
   }),
 })
 
-const router = createRouter({ routeTree })
+const router = createRouter({
+  routeTree,
+  context: { queryClient },
+})
 declare module "@tanstack/react-router" {
   interface Register {
     router: typeof router
   }
+}
+
+export type RouterContext = {
+  queryClient: QueryClient
 }
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

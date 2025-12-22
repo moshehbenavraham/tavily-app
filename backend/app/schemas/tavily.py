@@ -15,7 +15,7 @@ Schema Organization:
 from enum import StrEnum
 from typing import Annotated, Any
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 # =============================================================================
 # Enums
@@ -439,6 +439,44 @@ class MapResponse(BaseModel):
         default=0,
         description="Total number of URLs discovered",
     )
+
+    @field_validator("urls", mode="before")
+    @classmethod
+    def populate_urls_from_results(cls, v: list[str], info: Any) -> list[str]:
+        """Populate urls from results field if urls is empty.
+
+        The Tavily map API returns discovered URLs in the 'results' field,
+        but our schema expects them in 'urls'. This validator copies results
+        to urls when urls is empty.
+        """
+        if v:
+            return v
+        # Access the raw data to check for 'results' field
+        if hasattr(info, "data") and info.data:
+            results = info.data.get("results", [])
+            if results and isinstance(results, list):
+                # Filter to only include strings (URLs)
+                return [url for url in results if isinstance(url, str)]
+        return v or []
+
+    @model_validator(mode="before")
+    @classmethod
+    def map_results_to_urls(cls, data: dict[str, Any]) -> dict[str, Any]:
+        """Map results field to urls if urls is empty.
+
+        The Tavily API returns URLs in 'results', but we expect 'urls'.
+        """
+        if isinstance(data, dict):
+            urls = data.get("urls", [])
+            results = data.get("results", [])
+            # If urls is empty but results has string URLs, use results
+            if not urls and results:
+                # Filter to only include strings (in case results contains other data)
+                string_urls = [r for r in results if isinstance(r, str)]
+                if string_urls:
+                    data["urls"] = string_urls
+                    data["total_urls"] = len(string_urls)
+        return data
 
 
 # =============================================================================

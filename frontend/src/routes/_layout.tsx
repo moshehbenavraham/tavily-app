@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router"
 
+import { UsersService } from "@/client"
 import { Footer } from "@/components/Common/Footer"
 import AppSidebar from "@/components/Sidebar/AppSidebar"
 import {
@@ -11,8 +12,22 @@ import { isLoggedIn } from "@/hooks/useAuth"
 
 export const Route = createFileRoute("/_layout")({
   component: Layout,
-  beforeLoad: async () => {
+  beforeLoad: async ({ context }) => {
     if (!isLoggedIn()) {
+      throw redirect({
+        to: "/login",
+      })
+    }
+
+    // Validate token server-side by fetching the current user
+    try {
+      await context.queryClient.ensureQueryData({
+        queryKey: ["currentUser"],
+        queryFn: UsersService.readUserMe,
+      })
+    } catch {
+      // Token is invalid/expired - clear it and redirect to login
+      localStorage.removeItem("access_token")
       throw redirect({
         to: "/login",
       })

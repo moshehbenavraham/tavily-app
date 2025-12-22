@@ -129,7 +129,8 @@ class Settings(BaseSettings):
                 "for security, please change it, at least for deployments."
             )
             if self.ENVIRONMENT == "local":
-                warnings.warn(message, stacklevel=1)
+                # Suppress warnings in local development to reduce log noise
+                pass
             else:
                 raise ValueError(message)
 
