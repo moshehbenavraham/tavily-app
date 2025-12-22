@@ -75,11 +75,11 @@ print_safe_mode() {
     cat << 'EOF'
     ╔═══════════════════════════════════════════════════════════╗
     ║                                                           ║
-    ║   🛡️  SAFE MODE - Your database will be PRESERVED  🛡️    ║
+    ║   🛡️  SAFE MODE - Your database will be PRESERVED  🛡️     ║
     ║                                                           ║
-    ║   ✓ All user accounts will remain                        ║
-    ║   ✓ All application data will remain                     ║
-    ║   ✓ Volume: tavily-app_app-db-data is protected          ║
+    ║   ✓ All user accounts will remain                         ║
+    ║   ✓ All application data will remain                      ║
+    ║   ✓ Volume: tavily-app_app-db-data is protected           ║
     ║                                                           ║
     ╚═══════════════════════════════════════════════════════════╝
 EOF
