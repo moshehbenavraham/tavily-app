@@ -88,7 +88,7 @@ docker compose exec backend alembic downgrade <revision_id>
 
 ## Monitoring Checklist
 
-- [ ] Backend responding: `curl http://localhost:8000/api/v1/health`
+- [ ] Backend responding: `curl http://localhost:8009/api/v1/health`
 - [ ] Frontend loading: `curl http://localhost:5179`
 - [ ] Database connected: Check backend logs for connection success
 - [ ] Tavily API accessible: Test search endpoint with valid query

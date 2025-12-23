@@ -19,7 +19,7 @@ Git: clean | Stack(s): TypeScript + React + Vite (frontend), Python 3.10+ + Fast
 
 [E2E Tests - frontend]
   Status: SKIPPED - Playwright tests require running infrastructure
-  Reason: Tests configured for localhost:5173 with backend dependency
+  Reason: Tests configured for localhost:5181 with backend dependency
   Files: login.spec.ts, sign-up.spec.ts, reset-password.spec.ts, user-settings.spec.ts
 
 [Warnings - Backend Tests]

@@ -385,7 +385,7 @@ APP_ENV=production
 LOG_LEVEL=INFO
 
 # === DATABASE CONNECTIONS ===
-DATABASE_URL=postgresql://user:pass@host:5432/db
+DATABASE_URL=postgresql://user:pass@host:5440/db
 REDIS_URL=redis://host:6379/0
 
 # === API KEYS (Mark as Secret) ===
@@ -508,7 +508,7 @@ app.get('/health', (req, res) => {
 
 ```bash
 # Prometheus metrics endpoint
-METRICS_PORT=9090
+METRICS_PORT=9094
 METRICS_PATH=/metrics
 
 # Add to Coolify port configuration

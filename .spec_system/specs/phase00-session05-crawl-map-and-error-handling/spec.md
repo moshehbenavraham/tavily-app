@@ -216,12 +216,12 @@ All output files must use ASCII-only characters (0-127). Use standard quotes (`"
 
 1. **Endpoint Accessibility**:
    - Start server: `uv run fastapi dev app/main.py`
-   - Visit: `http://localhost:8000/api/v1/openapi.json`
+   - Visit: `http://localhost:8009/api/v1/openapi.json`
    - Verify all four Tavily endpoints listed
 
 2. **Crawl Endpoint**:
    ```bash
-   curl -X POST http://localhost:8000/api/v1/tavily/crawl \
+   curl -X POST http://localhost:8009/api/v1/tavily/crawl \
      -H "Authorization: Bearer <token>" \
      -H "Content-Type: application/json" \
      -d '{"url": "https://example.com", "max_depth": 0, "limit": 5}'
@@ -229,7 +229,7 @@ All output files must use ASCII-only characters (0-127). Use standard quotes (`"
 
 3. **Map Endpoint**:
    ```bash
-   curl -X POST http://localhost:8000/api/v1/tavily/map \
+   curl -X POST http://localhost:8009/api/v1/tavily/map \
      -H "Authorization: Bearer <token>" \
      -H "Content-Type: application/json" \
      -d '{"url": "https://example.com", "limit": 10}'

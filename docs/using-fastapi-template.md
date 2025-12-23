@@ -208,11 +208,11 @@ docker compose up -d
 Access points:
 | Service | URL |
 |---------|-----|
-| API | http://localhost:8000 |
-| API Docs (Swagger) | http://localhost:8000/docs |
-| API Docs (ReDoc) | http://localhost:8000/redoc |
-| Frontend | http://localhost:5173 |
-| Database | localhost:5432 |
+| API | http://localhost:8009 |
+| API Docs (Swagger) | http://localhost:8009/docs |
+| API Docs (ReDoc) | http://localhost:8009/redoc |
+| Frontend | http://localhost:5181 |
+| Database | localhost:5440 |
 
 **View logs:**
 ```bash
@@ -238,7 +238,7 @@ pip install -r requirements.txt
 alembic upgrade head
 
 # Start the server
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8009
 ```
 
 **Frontend:**

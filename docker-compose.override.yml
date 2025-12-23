@@ -46,7 +46,7 @@ services:
   db:
     restart: "no"
     ports:
-      - "5439:5432"
+      - "5440:5432"
 
   adminer:
     restart: "no"
@@ -55,12 +55,12 @@ services:
 
   prestart:
     environment:
-      POSTGRES_PORT: "5432"
+      POSTGRES_PORT: "5440"
 
   backend:
     restart: "no"
     ports:
-      - "8008:8000"
+      - "8009:8000"
     build:
       context: ./backend
     # command: sleep infinity  # Infinite loop to keep container alive doing nothing
@@ -83,7 +83,7 @@ services:
     volumes:
       - ./backend/htmlcov:/app/htmlcov
     environment:
-      POSTGRES_PORT: "5432"
+      POSTGRES_PORT: "5440"
       SMTP_HOST: "mailcatcher"
       SMTP_PORT: "1025"
       SMTP_TLS: "false"
@@ -110,7 +110,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.playwright
       args:
-        - VITE_API_URL=http://backend:8000
+        - VITE_API_URL=http://backend:8009
         - NODE_ENV=production
     ipc: host
     depends_on:
@@ -119,7 +119,7 @@ services:
     env_file:
       - .env
     environment:
-      - VITE_API_URL=http://backend:8000
+      - VITE_API_URL=http://backend:8009
       - MAILCATCHER_HOST=http://mailcatcher:1080
       # For the reports when run locally
       - PLAYWRIGHT_HTML_HOST=0.0.0.0

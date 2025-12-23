@@ -48,7 +48,7 @@ docker compose up -d
 
 This starts:
 - PostgreSQL database on port 5439
-- Backend API on http://localhost:8000
+- Backend API on http://localhost:8009
 - Frontend on http://localhost:5179
 - Mailcatcher on http://localhost:1080
 
@@ -88,7 +88,7 @@ cd backend && alembic upgrade head
 
 - [ ] App runs at http://localhost:5179
 - [ ] Can log in with `admin@example.com` / your superuser password
-- [ ] API docs available at http://localhost:8000/docs
+- [ ] API docs available at http://localhost:8009/docs
 - [ ] Backend tests pass: `cd backend && bash scripts/test.sh`
 
 ## Development Workflow
@@ -107,7 +107,7 @@ cd backend && alembic upgrade head
 ```bash
 docker compose down
 lsof -i :5179  # Check frontend port
-lsof -i :8000  # Check backend port
+lsof -i :8009  # Check backend port
 ```
 
 ### Database Connection Refused

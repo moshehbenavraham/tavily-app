@@ -52,7 +52,7 @@
 
 **Notes**:
 - Initial run failed: openapi.json not found locally
-- Fixed by fetching spec from backend: `curl http://localhost:8000/api/v1/openapi.json > openapi.json`
+- Fixed by fetching spec from backend: `curl http://localhost:8009/api/v1/openapi.json > openapi.json`
 - Successfully regenerated client with `npm run generate-client`
 
 **Files Changed**:
