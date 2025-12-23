@@ -34,7 +34,7 @@
 **Notes**:
 - Python 3.12.3 available on host
 - Backend running in Docker container with all dependencies
-- Container healthy and accessible on port 8008
+- Container healthy and accessible on port 8009
 
 ---
 

@@ -212,7 +212,7 @@ Access points:
 | API Docs (Swagger) | http://localhost:8009/docs |
 | API Docs (ReDoc) | http://localhost:8009/redoc |
 | Frontend | http://localhost:5181 |
-| Database | localhost:5440 |
+| Database | localhost:5441 |
 
 **View logs:**
 ```bash

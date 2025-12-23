@@ -385,7 +385,7 @@ APP_ENV=production
 LOG_LEVEL=INFO
 
 # === DATABASE CONNECTIONS ===
-DATABASE_URL=postgresql://user:pass@host:5440/db
+DATABASE_URL=postgresql://user:pass@host:5441/db
 REDIS_URL=redis://host:6379/0
 
 # === API KEYS (Mark as Secret) ===

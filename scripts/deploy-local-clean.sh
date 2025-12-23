@@ -106,21 +106,19 @@ EOF
 
 print_success() {
     echo -e "${GREEN}"
-    cat << 'EOF'
-
-    ╔═══════════════════════════════════════════════════════════╗
-    ║                                                           ║
-    ║   ✅  DEPLOYMENT COMPLETE - ALL SYSTEMS GO!  ✅           ║
-    ║                                                           ║
-    ╚═══════════════════════════════════════════════════════════╝
-
-       🌐 Frontend:    http://localhost:5179
-       🔌 Backend API: http://localhost:8008/docs
-       🗄️  Adminer:     http://localhost:8088
-       📧 Mailcatcher: http://localhost:1080
-       🚦 Traefik:     http://localhost:8090
-
-EOF
+    echo ""
+    echo "    ╔═══════════════════════════════════════════════════════════╗"
+    echo "    ║                                                           ║"
+    echo "    ║   ✅  DEPLOYMENT COMPLETE - ALL SYSTEMS GO!  ✅           ║"
+    echo "    ║                                                           ║"
+    echo "    ╚═══════════════════════════════════════════════════════════╝"
+    echo ""
+    echo "       🌐 Frontend:    http://localhost:${PORT_FRONTEND:-unknown}"
+    echo "       🔌 Backend API: http://localhost:${PORT_BACKEND:-unknown}/docs"
+    echo "       🗄️  Adminer:     http://localhost:${PORT_ADMINER:-unknown}"
+    echo "       📧 Mailcatcher: http://localhost:${PORT_MAILCATCHER:-unknown}"
+    echo "       🚦 Traefik:     http://localhost:${PORT_TRAEFIK:-unknown}"
+    echo ""
     echo -e "${NC}"
 }
 
@@ -173,6 +171,15 @@ log_error() {
 
 log_detail() {
     echo -e "${GRAY}      ${1}${NC}"
+}
+
+# Get the host port for a container's internal port
+# Usage: get_container_port <container_name> <internal_port>
+# Example: get_container_port tavily-app-backend-1 8000
+get_container_port() {
+    local container=$1
+    local internal_port=$2
+    docker port "$container" "$internal_port" 2>/dev/null | head -1 | cut -d: -f2 || echo "unknown"
 }
 
 spinner() {
@@ -439,6 +446,14 @@ else
     log_detail "Frontend: $FRONTEND_STATUS"
 fi
 
+# Get dynamic ports from running containers
+PORT_DB=$(get_container_port tavily-app-db-1 5432)
+PORT_BACKEND=$(get_container_port tavily-app-backend-1 8000)
+PORT_FRONTEND=$(get_container_port tavily-app-frontend-1 80)
+PORT_ADMINER=$(get_container_port tavily-app-adminer-1 8080)
+PORT_MAILCATCHER=$(get_container_port tavily-app-mailcatcher-1 1080)
+PORT_TRAEFIK=$(get_container_port tavily-app-proxy-1 8080)
+
 # -----------------------------------------------------------------------------
 # SUMMARY
 # -----------------------------------------------------------------------------
@@ -455,15 +470,21 @@ echo -e "  ${GRAY}Total time:${NC}     ${TOTAL_TIME} seconds"
 echo -e "  ${GRAY}Build time:${NC}     ${BUILD_TIME} seconds"
 echo ""
 
-# Final service table
+# Final service table (using dynamic ports)
 echo -e "  ${GRAY}┌─────────────────┬────────────┬─────────────────────────┐${NC}"
 echo -e "  ${GRAY}│${NC} ${WHITE}Service${NC}         ${GRAY}│${NC} ${WHITE}Status${NC}     ${GRAY}│${NC} ${WHITE}URL${NC}                     ${GRAY}│${NC}"
 echo -e "  ${GRAY}├─────────────────┼────────────┼─────────────────────────┤${NC}"
-echo -e "  ${GRAY}│${NC} Database        ${GRAY}│${NC} $([ "$DB_HEALTH" = "healthy" ] && echo -e "${GREEN}● healthy${NC} " || echo -e "${YELLOW}● $DB_HEALTH${NC}") ${GRAY}│${NC} localhost:5439          ${GRAY}│${NC}"
-echo -e "  ${GRAY}│${NC} Backend         ${GRAY}│${NC} $([ "$BACKEND_HEALTH" = "healthy" ] && echo -e "${GREEN}● healthy${NC} " || echo -e "${YELLOW}● $BACKEND_HEALTH${NC}") ${GRAY}│${NC} localhost:8008/docs     ${GRAY}│${NC}"
-echo -e "  ${GRAY}│${NC} Frontend        ${GRAY}│${NC} $([ "$FRONTEND_STATUS" = "running" ] && echo -e "${GREEN}● running${NC} " || echo -e "${YELLOW}● $FRONTEND_STATUS${NC}") ${GRAY}│${NC} localhost:5179          ${GRAY}│${NC}"
-echo -e "  ${GRAY}│${NC} Adminer         ${GRAY}│${NC} ${GREEN}● running${NC}  ${GRAY}│${NC} localhost:8088          ${GRAY}│${NC}"
-echo -e "  ${GRAY}│${NC} Mailcatcher     ${GRAY}│${NC} ${GREEN}● running${NC}  ${GRAY}│${NC} localhost:1080          ${GRAY}│${NC}"
+printf "  ${GRAY}│${NC} Database        ${GRAY}│${NC} %s ${GRAY}│${NC} %-23s ${GRAY}│${NC}\n" \
+    "$([ "$DB_HEALTH" = "healthy" ] && echo -e "${GREEN}● healthy${NC}" || echo -e "${YELLOW}● $DB_HEALTH${NC}")" \
+    "localhost:${PORT_DB}"
+printf "  ${GRAY}│${NC} Backend         ${GRAY}│${NC} %s ${GRAY}│${NC} %-23s ${GRAY}│${NC}\n" \
+    "$([ "$BACKEND_HEALTH" = "healthy" ] && echo -e "${GREEN}● healthy${NC}" || echo -e "${YELLOW}● $BACKEND_HEALTH${NC}")" \
+    "localhost:${PORT_BACKEND}/docs"
+printf "  ${GRAY}│${NC} Frontend        ${GRAY}│${NC} %s ${GRAY}│${NC} %-23s ${GRAY}│${NC}\n" \
+    "$([ "$FRONTEND_STATUS" = "running" ] && echo -e "${GREEN}● running${NC}" || echo -e "${YELLOW}● $FRONTEND_STATUS${NC}")" \
+    "localhost:${PORT_FRONTEND}"
+printf "  ${GRAY}│${NC} Adminer         ${GRAY}│${NC} ${GREEN}● running${NC}  ${GRAY}│${NC} %-23s ${GRAY}│${NC}\n" "localhost:${PORT_ADMINER}"
+printf "  ${GRAY}│${NC} Mailcatcher     ${GRAY}│${NC} ${GREEN}● running${NC}  ${GRAY}│${NC} %-23s ${GRAY}│${NC}\n" "localhost:${PORT_MAILCATCHER}"
 echo -e "  ${GRAY}└─────────────────┴────────────┴─────────────────────────┘${NC}"
 echo ""
 

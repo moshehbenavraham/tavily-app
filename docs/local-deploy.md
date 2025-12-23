@@ -161,7 +161,7 @@ The Tavily app consists of the following services:
 
 | Service      | Image                    | Port(s)              | Purpose                    |
 |--------------|--------------------------|----------------------|----------------------------|
-| db           | postgres:17              | 5440:5432            | PostgreSQL database        |
+| db           | postgres:17              | 5441:5432            | PostgreSQL database        |
 | backend      | tavily-backend:latest    | 8009:8000            | FastAPI backend            |
 | frontend     | tavily-frontend:latest   | 5179:80              | Nginx serving React app    |
 | proxy        | traefik:3.3              | 80, 8090:8080        | Reverse proxy (disabled)   |
@@ -326,7 +326,7 @@ docker volume ls --filter "name=tavily"    # <-- Should be EMPTY now
 docker images --filter "reference=tavily*"
 
 # Verify ports are free
-lsof -i :5179 -i :8008 -i :8088 -i :5439 -i :1080 -i :1025 -i :8090
+lsof -i :5179 -i :8009 -i :8088 -i :5439 -i :1080 -i :1025 -i :8090
 ```
 
 ### Step 6: Force Rebuild All Images
@@ -369,7 +369,7 @@ docker compose ps -a
 **Test endpoints:**
 
 ```bash
-curl http://localhost:8008/api/v1/utils/health-check/   # Should return: true
+curl http://localhost:8009/api/v1/utils/health-check/   # Should return: true
 curl -I http://localhost:5179                            # Should return: 200 OK
 curl -I http://localhost:8088                            # Should return: 200 OK
 ```
@@ -429,7 +429,7 @@ docker compose logs db
 ### Port already in use
 
 ```bash
-lsof -i :8008
+lsof -i :8009
 docker rm -f tavily-app-backend-1
 ```
 
@@ -451,7 +451,7 @@ The warning `The "CI" variable is not set` is normal for local development.
 | Service          | URL                           | Credentials              |
 |------------------|-------------------------------|--------------------------|
 | Frontend         | http://localhost:5179         | Login with app users     |
-| Backend API      | http://localhost:8008/docs    | Swagger UI               |
+| Backend API      | http://localhost:8009/docs    | Swagger UI               |
 | Adminer          | http://localhost:8088         | Use .env DB credentials  |
 | Mailcatcher      | http://localhost:1080         | No auth required         |
 | Traefik Dashboard| http://localhost:8090         | No auth required         |

@@ -8,7 +8,7 @@ services:
   proxy:
     image: traefik:3.3
     # Note: Docker provider disabled for local dev due to API version incompatibility
-    # Services are accessed directly via their exposed ports (backend:8008, frontend:5179, etc.)
+    # Services are accessed directly via their exposed ports (backend:8009, frontend:5179, etc.)
     volumes:
       # Docker socket not mounted - provider disabled
       - /dev/null:/var/run/docker.sock:ro
@@ -46,7 +46,7 @@ services:
   db:
     restart: "no"
     ports:
-      - "5440:5432"
+      - "5441:5432"
 
   adminer:
     restart: "no"
@@ -55,7 +55,7 @@ services:
 
   prestart:
     environment:
-      POSTGRES_PORT: "5440"
+      POSTGRES_PORT: "5432"
 
   backend:
     restart: "no"
@@ -83,7 +83,7 @@ services:
     volumes:
       - ./backend/htmlcov:/app/htmlcov
     environment:
-      POSTGRES_PORT: "5440"
+      POSTGRES_PORT: "5432"
       SMTP_HOST: "mailcatcher"
       SMTP_PORT: "1025"
       SMTP_TLS: "false"
@@ -102,7 +102,7 @@ services:
     build:
       context: ./frontend
       args:
-        - VITE_API_URL=http://localhost:8008
+        - VITE_API_URL=http://localhost:8009
         - NODE_ENV=development
 
   playwright:
@@ -110,7 +110,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.playwright
       args:
-        - VITE_API_URL=http://backend:8009
+        - VITE_API_URL=http://backend:8000
         - NODE_ENV=production
     ipc: host
     depends_on:
@@ -119,7 +119,7 @@ services:
     env_file:
       - .env
     environment:
-      - VITE_API_URL=http://backend:8009
+      - VITE_API_URL=http://backend:8000
       - MAILCATCHER_HOST=http://mailcatcher:1080
       # For the reports when run locally
       - PLAYWRIGHT_HTML_HOST=0.0.0.0
