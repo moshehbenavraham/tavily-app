@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { Sparkles } from "lucide-react"
+import { Loader2, Sparkles } from "lucide-react"
+import { useEffect, useState } from "react"
 
+import type { PerplexityDeepResearchResponse } from "@/client/types.gen"
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+  PerplexityDeepResearchForm,
+  PerplexityResultView,
+} from "@/components/Perplexity"
+import { Card, CardContent } from "@/components/ui/card"
+import { usePerplexityDeepResearch } from "@/hooks/usePerplexityDeepResearch"
 
 export const Route = createFileRoute("/_layout/perplexity-research")({
   component: PerplexityResearchPage,
@@ -17,8 +18,43 @@ export const Route = createFileRoute("/_layout/perplexity-research")({
 })
 
 function PerplexityResearchPage() {
+  const [result, setResult] = useState<PerplexityDeepResearchResponse | null>(
+    null,
+  )
+  const [elapsedSeconds, setElapsedSeconds] = useState(0)
+
+  const mutation = usePerplexityDeepResearch({
+    onSuccess: (data) => {
+      setResult(data)
+      setElapsedSeconds(0)
+    },
+  })
+
+  // Elapsed time counter during loading
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval> | null = null
+
+    if (mutation.isPending) {
+      setElapsedSeconds(0)
+      interval = setInterval(() => {
+        setElapsedSeconds((prev) => prev + 1)
+      }, 1000)
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval)
+      }
+    }
+  }, [mutation.isPending])
+
+  const handleResearchComplete = (data: unknown) => {
+    setResult(data as PerplexityDeepResearchResponse)
+  }
+
   return (
     <div className="flex flex-col gap-8">
+      {/* Page Header */}
       <header className="page-enter space-y-3">
         <div className="flex items-center gap-3">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10">
@@ -36,26 +72,59 @@ function PerplexityResearchPage() {
         </p>
       </header>
 
+      {/* Research Form */}
       <Card className="page-enter-child" variant="elevated">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-heading">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent" />
-            Coming Soon
-          </CardTitle>
-          <CardDescription>
-            Deep research functionality is being implemented in upcoming
-            sessions.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            This page will allow you to submit research queries to Perplexity's
-            Sonar deep research model. Results will include detailed answers
-            with citations, source URLs, and the ability to save findings to
-            your Items collection.
-          </p>
+        <CardContent className="pt-6">
+          <PerplexityDeepResearchForm
+            onResearchComplete={handleResearchComplete}
+            isLoading={mutation.isPending}
+          />
         </CardContent>
       </Card>
+
+      {/* Loading State with Elapsed Time */}
+      {mutation.isPending && (
+        <Card className="page-enter-child" variant="muted">
+          <CardContent className="py-8">
+            <div className="flex flex-col items-center justify-center gap-4">
+              <div className="relative">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+              <div className="text-center">
+                <p className="font-medium">Researching...</p>
+                <p className="text-sm text-muted-foreground">
+                  Deep research queries typically take 30-60 seconds
+                </p>
+                <p className="mt-2 font-mono text-lg text-primary">
+                  {elapsedSeconds}s
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Results */}
+      {result && !mutation.isPending && (
+        <div className="page-enter-child">
+          <PerplexityResultView response={result} />
+        </div>
+      )}
+
+      {/* Error State */}
+      {mutation.isError && !mutation.isPending && (
+        <Card className="page-enter-child border-destructive" variant="muted">
+          <CardContent className="py-6">
+            <div className="text-center">
+              <p className="font-medium text-destructive">Research Failed</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {mutation.error?.message ||
+                  "An error occurred while processing your request."}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }
