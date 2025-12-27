@@ -1,6 +1,15 @@
 from fastapi import APIRouter
 
-from app.api.routes import items, login, perplexity, private, tavily, users, utils
+from app.api.routes import (
+    gemini,
+    items,
+    login,
+    perplexity,
+    private,
+    tavily,
+    users,
+    utils,
+)
 from app.core.config import settings
 
 api_router = APIRouter()
@@ -10,6 +19,7 @@ api_router.include_router(utils.router)
 api_router.include_router(items.router)
 api_router.include_router(tavily.router)
 api_router.include_router(perplexity.router)
+api_router.include_router(gemini.router)
 
 
 if settings.ENVIRONMENT == "local":

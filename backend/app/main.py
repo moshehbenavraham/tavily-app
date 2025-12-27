@@ -7,6 +7,7 @@ from starlette.middleware.cors import CORSMiddleware
 from app.api.main import api_router
 from app.core.config import settings
 from app.core.exceptions import TavilyAPIError
+from app.exceptions.gemini import GeminiAPIError
 from app.exceptions.perplexity import PerplexityAPIError
 from app.schemas.tavily import ErrorResponse
 
@@ -75,6 +76,33 @@ async def perplexity_exception_handler(
     Args:
         _request: The incoming request that caused the exception (unused).
         exc: The PerplexityAPIError that was raised.
+
+    Returns:
+        JSONResponse with ErrorResponse body and appropriate status code.
+    """
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=ErrorResponse(
+            error_code=exc.error_code,
+            message=exc.message,
+            details=exc.details,
+        ).model_dump(),
+    )
+
+
+@app.exception_handler(GeminiAPIError)
+async def gemini_exception_handler(
+    _request: Request,
+    exc: GeminiAPIError,
+) -> JSONResponse:
+    """Handle GeminiAPIError exceptions.
+
+    Converts GeminiAPIError to a structured JSON error response with
+    appropriate HTTP status code.
+
+    Args:
+        _request: The incoming request that caused the exception (unused).
+        exc: The GeminiAPIError that was raised.
 
     Returns:
         JSONResponse with ErrorResponse body and appropriate status code.

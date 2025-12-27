@@ -26,7 +26,7 @@
     "3": {
       "name": "Deep Research Backend",
       "description": "Perplexity Sonar and Google Gemini deep research API integration with configuration, schemas, services, and routes",
-      "status": "in_progress",
+      "status": "complete",
       "session_count": 6
     }
   },
@@ -50,10 +50,16 @@
     "phase03-session02-perplexity-schemas-and-exceptions",
     "phase03-session03-gemini-schemas-and-exceptions",
     "phase03-session04-perplexity-service-and-route",
-    "phase03-session05-gemini-service-implementation"
+    "phase03-session05-gemini-service-implementation",
+    "phase03-session06-gemini-routes-and-integration"
   ],
   "pending_phase": null,
   "next_session_history": [
+    {
+      "date": "2025-12-27",
+      "session": "phase03-session06-gemini-routes-and-integration",
+      "status": "completed"
+    },
     {
       "date": "2025-12-27",
       "session": "phase03-session05-gemini-service-implementation",
