@@ -17,8 +17,10 @@ import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
 import { Route as LayoutSearchRouteImport } from './routes/_layout/search'
+import { Route as LayoutPerplexityResearchRouteImport } from './routes/_layout/perplexity-research'
 import { Route as LayoutMapRouteImport } from './routes/_layout/map'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
+import { Route as LayoutGeminiResearchRouteImport } from './routes/_layout/gemini-research'
 import { Route as LayoutExtractRouteImport } from './routes/_layout/extract'
 import { Route as LayoutCrawlRouteImport } from './routes/_layout/crawl'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
@@ -62,6 +64,12 @@ const LayoutSearchRoute = LayoutSearchRouteImport.update({
   path: '/search',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutPerplexityResearchRoute =
+  LayoutPerplexityResearchRouteImport.update({
+    id: '/perplexity-research',
+    path: '/perplexity-research',
+    getParentRoute: () => LayoutRoute,
+  } as any)
 const LayoutMapRoute = LayoutMapRouteImport.update({
   id: '/map',
   path: '/map',
@@ -70,6 +78,11 @@ const LayoutMapRoute = LayoutMapRouteImport.update({
 const LayoutItemsRoute = LayoutItemsRouteImport.update({
   id: '/items',
   path: '/items',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutGeminiResearchRoute = LayoutGeminiResearchRouteImport.update({
+  id: '/gemini-research',
+  path: '/gemini-research',
   getParentRoute: () => LayoutRoute,
 } as any)
 const LayoutExtractRoute = LayoutExtractRouteImport.update({
@@ -96,8 +109,10 @@ export interface FileRoutesByFullPath {
   '/admin': typeof LayoutAdminRoute
   '/crawl': typeof LayoutCrawlRoute
   '/extract': typeof LayoutExtractRoute
+  '/gemini-research': typeof LayoutGeminiResearchRoute
   '/items': typeof LayoutItemsRoute
   '/map': typeof LayoutMapRoute
+  '/perplexity-research': typeof LayoutPerplexityResearchRoute
   '/search': typeof LayoutSearchRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
@@ -110,8 +125,10 @@ export interface FileRoutesByTo {
   '/admin': typeof LayoutAdminRoute
   '/crawl': typeof LayoutCrawlRoute
   '/extract': typeof LayoutExtractRoute
+  '/gemini-research': typeof LayoutGeminiResearchRoute
   '/items': typeof LayoutItemsRoute
   '/map': typeof LayoutMapRoute
+  '/perplexity-research': typeof LayoutPerplexityResearchRoute
   '/search': typeof LayoutSearchRoute
   '/settings': typeof LayoutSettingsRoute
   '/': typeof LayoutIndexRoute
@@ -126,8 +143,10 @@ export interface FileRoutesById {
   '/_layout/admin': typeof LayoutAdminRoute
   '/_layout/crawl': typeof LayoutCrawlRoute
   '/_layout/extract': typeof LayoutExtractRoute
+  '/_layout/gemini-research': typeof LayoutGeminiResearchRoute
   '/_layout/items': typeof LayoutItemsRoute
   '/_layout/map': typeof LayoutMapRoute
+  '/_layout/perplexity-research': typeof LayoutPerplexityResearchRoute
   '/_layout/search': typeof LayoutSearchRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/': typeof LayoutIndexRoute
@@ -142,8 +161,10 @@ export interface FileRouteTypes {
     | '/admin'
     | '/crawl'
     | '/extract'
+    | '/gemini-research'
     | '/items'
     | '/map'
+    | '/perplexity-research'
     | '/search'
     | '/settings'
     | '/'
@@ -156,8 +177,10 @@ export interface FileRouteTypes {
     | '/admin'
     | '/crawl'
     | '/extract'
+    | '/gemini-research'
     | '/items'
     | '/map'
+    | '/perplexity-research'
     | '/search'
     | '/settings'
     | '/'
@@ -171,8 +194,10 @@ export interface FileRouteTypes {
     | '/_layout/admin'
     | '/_layout/crawl'
     | '/_layout/extract'
+    | '/_layout/gemini-research'
     | '/_layout/items'
     | '/_layout/map'
+    | '/_layout/perplexity-research'
     | '/_layout/search'
     | '/_layout/settings'
     | '/_layout/'
@@ -244,6 +269,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutSearchRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/perplexity-research': {
+      id: '/_layout/perplexity-research'
+      path: '/perplexity-research'
+      fullPath: '/perplexity-research'
+      preLoaderRoute: typeof LayoutPerplexityResearchRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/map': {
       id: '/_layout/map'
       path: '/map'
@@ -256,6 +288,13 @@ declare module '@tanstack/react-router' {
       path: '/items'
       fullPath: '/items'
       preLoaderRoute: typeof LayoutItemsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/gemini-research': {
+      id: '/_layout/gemini-research'
+      path: '/gemini-research'
+      fullPath: '/gemini-research'
+      preLoaderRoute: typeof LayoutGeminiResearchRouteImport
       parentRoute: typeof LayoutRoute
     }
     '/_layout/extract': {
@@ -286,8 +325,10 @@ interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
   LayoutCrawlRoute: typeof LayoutCrawlRoute
   LayoutExtractRoute: typeof LayoutExtractRoute
+  LayoutGeminiResearchRoute: typeof LayoutGeminiResearchRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
   LayoutMapRoute: typeof LayoutMapRoute
+  LayoutPerplexityResearchRoute: typeof LayoutPerplexityResearchRoute
   LayoutSearchRoute: typeof LayoutSearchRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
@@ -297,8 +338,10 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
   LayoutCrawlRoute: LayoutCrawlRoute,
   LayoutExtractRoute: LayoutExtractRoute,
+  LayoutGeminiResearchRoute: LayoutGeminiResearchRoute,
   LayoutItemsRoute: LayoutItemsRoute,
   LayoutMapRoute: LayoutMapRoute,
+  LayoutPerplexityResearchRoute: LayoutPerplexityResearchRoute,
   LayoutSearchRoute: LayoutSearchRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutIndexRoute: LayoutIndexRoute,

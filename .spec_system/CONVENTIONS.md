@@ -169,6 +169,6 @@ This document defines coding conventions for the tavily-app project. All AI-assi
 - Docstrings for public functions and classes
 
 ### TypeScript
-- Run `eslint` and `prettier`
+- Run `biome` for linting and formatting
 - No TypeScript errors in strict mode
 - JSDoc comments for complex functions

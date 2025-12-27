@@ -407,8 +407,7 @@ class GeminiService:
                 # Handle failure status
                 if result.status == GeminiInteractionStatus.FAILED:
                     raise GeminiAPIError.research_failed(
-                        message=result.error_message
-                        or "Deep research job failed.",
+                        message=result.error_message or "Deep research job failed.",
                         details={"interaction_id": interaction_id},
                     )
 

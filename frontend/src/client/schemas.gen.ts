@@ -296,6 +296,288 @@ export const ExtractResultSchema = {
 Contains the extracted content from a URL including text and images.`
 } as const;
 
+export const GeminiDeepResearchJobResponseSchema = {
+    properties: {
+        interaction_id: {
+            type: 'string',
+            title: 'Interaction Id',
+            description: 'Unique identifier for this research interaction'
+        },
+        status: {
+            '$ref': '#/components/schemas/GeminiInteractionStatus',
+            description: 'Initial status of the job (typically pending)',
+            default: 'pending'
+        },
+        created_at: {
+            type: 'string',
+            format: 'date-time',
+            title: 'Created At',
+            description: 'Timestamp when the job was created'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['interaction_id', 'created_at'],
+    title: 'GeminiDeepResearchJobResponse',
+    description: `Response schema for Gemini deep research job creation.
+
+Returned immediately after submitting a new deep research request.
+Contains the interaction ID needed for subsequent polling.`
+} as const;
+
+export const GeminiDeepResearchRequestSchema = {
+    properties: {
+        query: {
+            type: 'string',
+            maxLength: 32000,
+            minLength: 1,
+            title: 'Query',
+            description: 'The research query to investigate'
+        },
+        enable_thinking_summaries: {
+            type: 'boolean',
+            title: 'Enable Thinking Summaries',
+            description: 'Include thinking/reasoning summaries in responses',
+            default: false
+        },
+        file_search_store_names: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'File Search Store Names',
+            description: 'Names of file stores to search for context'
+        },
+        previous_interaction_id: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Previous Interaction Id',
+            description: 'ID of previous interaction for continuation'
+        }
+    },
+    additionalProperties: false,
+    type: 'object',
+    required: ['query'],
+    title: 'GeminiDeepResearchRequest',
+    description: `Request schema for initiating a Gemini deep research job.
+
+Contains all parameters for submitting a new deep research query.
+The job runs asynchronously and returns an interaction ID for polling.
+
+Parameter Groups:
+    Core: query (required)
+    Options: enable_thinking_summaries, file_search_store_names
+    Continuation: previous_interaction_id`
+} as const;
+
+export const GeminiDeepResearchResultResponseSchema = {
+    properties: {
+        status: {
+            '$ref': '#/components/schemas/GeminiInteractionStatus',
+            description: 'Current status of the research job'
+        },
+        outputs: {
+            items: {
+                '$ref': '#/components/schemas/GeminiOutput'
+            },
+            type: 'array',
+            title: 'Outputs',
+            description: 'List of output segments from the research'
+        },
+        usage: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/GeminiUsage'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            description: 'Token usage information (available on completion)'
+        },
+        completed_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Completed At',
+            description: 'Timestamp when the job completed (if applicable)'
+        },
+        event_id: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Event Id',
+            description: 'ID of this event for reconnection tracking'
+        },
+        event_type: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/GeminiStreamEventType'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            description: 'Type of streaming event (if applicable)'
+        },
+        error_message: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Error Message',
+            description: 'Error message if status is FAILED'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['status'],
+    title: 'GeminiDeepResearchResultResponse',
+    description: `Response schema for Gemini deep research polling results.
+
+Contains the current status and any available results from polling.
+When status is COMPLETED, outputs and usage will be populated.`
+} as const;
+
+export const GeminiDeltaTypeSchema = {
+    type: 'string',
+    enum: ['text', 'tool_call', 'status'],
+    title: 'GeminiDeltaType',
+    description: `Delta types for incremental response updates.
+
+Categorizes the type of content in incremental streaming updates.
+
+Attributes:
+    TEXT: Text content delta.
+    TOOL_CALL: Tool/function call delta.
+    STATUS: Status change delta.`
+} as const;
+
+export const GeminiInteractionStatusSchema = {
+    type: 'string',
+    enum: ['pending', 'running', 'completed', 'failed', 'cancelled'],
+    title: 'GeminiInteractionStatus',
+    description: `Status states for Gemini deep research interactions.
+
+Represents the lifecycle states of an async deep research job from
+submission through completion or failure.
+
+Attributes:
+    PENDING: Job submitted but not yet started processing.
+    RUNNING: Job is actively being processed.
+    COMPLETED: Job finished successfully with results available.
+    FAILED: Job encountered an error and could not complete.
+    CANCELLED: Job was cancelled before completion.`
+} as const;
+
+export const GeminiOutputSchema = {
+    properties: {
+        content: {
+            type: 'string',
+            title: 'Content',
+            description: 'Text content of this output segment',
+            default: ''
+        },
+        thinking_summary: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Thinking Summary',
+            description: 'Summary of reasoning/thinking for this segment'
+        },
+        delta_type: {
+            '$ref': '#/components/schemas/GeminiDeltaType',
+            description: 'Type of content in this output (text, tool_call, status)',
+            default: 'text'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    title: 'GeminiOutput',
+    description: `Individual output segment from Gemini deep research response.
+
+Represents a content segment which may include text, thinking summaries,
+or tool call results.`
+} as const;
+
+export const GeminiStreamEventTypeSchema = {
+    type: 'string',
+    enum: ['thinking_update', 'research_update', 'final_result', 'error'],
+    title: 'GeminiStreamEventType',
+    description: `Event types for Gemini streaming responses during polling.
+
+Identifies the type of event received when polling for job progress,
+enabling clients to handle different event types appropriately.
+
+Attributes:
+    THINKING_UPDATE: Progress update on reasoning/thinking process.
+    RESEARCH_UPDATE: Progress update on research gathering.
+    FINAL_RESULT: Final result payload with complete response.
+    ERROR: Error event indicating job failure.`
+} as const;
+
+export const GeminiUsageSchema = {
+    properties: {
+        input_tokens: {
+            type: 'integer',
+            title: 'Input Tokens',
+            description: 'Number of tokens in the input prompt',
+            default: 0
+        },
+        output_tokens: {
+            type: 'integer',
+            title: 'Output Tokens',
+            description: 'Number of tokens in the generated output',
+            default: 0
+        },
+        total_tokens: {
+            type: 'integer',
+            title: 'Total Tokens',
+            description: 'Total tokens used in the request',
+            default: 0
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    title: 'GeminiUsage',
+    description: `Token usage information from Gemini API response.
+
+Contains token counts for monitoring API usage and costs.`
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -705,6 +987,571 @@ export const NewPasswordSchema = {
     type: 'object',
     required: ['token', 'new_password'],
     title: 'NewPassword'
+} as const;
+
+export const PerplexityChoiceSchema = {
+    properties: {
+        index: {
+            type: 'integer',
+            title: 'Index',
+            description: 'Index of this choice in the list',
+            default: 0
+        },
+        message: {
+            '$ref': '#/components/schemas/PerplexityMessage',
+            description: 'The message content for this choice'
+        },
+        finish_reason: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Finish Reason',
+            description: 'Reason the model stopped generating (stop, length, etc.)'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['message'],
+    title: 'PerplexityChoice',
+    description: `Individual choice from Perplexity response.
+
+Represents one possible response from the model.`
+} as const;
+
+export const PerplexityDeepResearchRequestSchema = {
+    properties: {
+        query: {
+            type: 'string',
+            maxLength: 10000,
+            minLength: 1,
+            title: 'Query',
+            description: 'The research query to answer'
+        },
+        model: {
+            type: 'string',
+            title: 'Model',
+            description: 'Perplexity model to use (sonar, sonar-pro, sonar-reasoning)',
+            default: 'sonar-pro'
+        },
+        system_prompt: {
+            anyOf: [
+                {
+                    type: 'string',
+                    maxLength: 5000
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'System Prompt',
+            description: 'System prompt to guide the model behavior'
+        },
+        search_mode: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/PerplexitySearchMode'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            description: 'Search mode (auto, news, academic, social)'
+        },
+        reasoning_effort: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/PerplexityReasoningEffort'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            description: 'Reasoning effort level for reasoning models'
+        },
+        search_context_size: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/PerplexitySearchContextSize'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            description: 'Amount of search context to include'
+        },
+        max_tokens: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    maximum: 16384,
+                    minimum: 1
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Max Tokens',
+            description: 'Maximum tokens in the response (1-16384)'
+        },
+        temperature: {
+            anyOf: [
+                {
+                    type: 'number',
+                    maximum: 2,
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Temperature',
+            description: 'Sampling temperature (0.0-2.0)'
+        },
+        top_p: {
+            anyOf: [
+                {
+                    type: 'number',
+                    maximum: 1,
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Top P',
+            description: 'Nucleus sampling probability (0.0-1.0)'
+        },
+        top_k: {
+            anyOf: [
+                {
+                    type: 'integer',
+                    minimum: 0
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Top K',
+            description: 'Top-k sampling parameter'
+        },
+        presence_penalty: {
+            anyOf: [
+                {
+                    type: 'number',
+                    maximum: 2,
+                    minimum: -2
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Presence Penalty',
+            description: 'Presence penalty (-2.0 to 2.0)'
+        },
+        frequency_penalty: {
+            anyOf: [
+                {
+                    type: 'number',
+                    maximum: 2,
+                    minimum: -2
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Frequency Penalty',
+            description: 'Frequency penalty (-2.0 to 2.0)'
+        },
+        search_recency_filter: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/PerplexityRecencyFilter'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            description: 'Filter results by recency (hour, day, week, month)'
+        },
+        search_domain_filter: {
+            anyOf: [
+                {
+                    items: {
+                        type: 'string'
+                    },
+                    type: 'array'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Search Domain Filter',
+            description: 'Domains to include/exclude (prefix with - to exclude)'
+        },
+        search_after_date_filter: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Search After Date Filter',
+            description: 'Only include content after this date (MM/DD/YYYY format)'
+        },
+        search_before_date_filter: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Search Before Date Filter',
+            description: 'Only include content before this date (MM/DD/YYYY format)'
+        },
+        return_images: {
+            type: 'boolean',
+            title: 'Return Images',
+            description: 'Include images in the response (Tier-2+ only)',
+            default: false
+        },
+        return_related_questions: {
+            type: 'boolean',
+            title: 'Return Related Questions',
+            description: 'Include related follow-up questions',
+            default: false
+        },
+        stream: {
+            type: 'boolean',
+            title: 'Stream',
+            description: 'Enable streaming response',
+            default: false
+        }
+    },
+    additionalProperties: false,
+    type: 'object',
+    required: ['query'],
+    title: 'PerplexityDeepResearchRequest',
+    description: `Request schema for Perplexity Sonar deep research queries.
+
+Contains all parameters for performing a deep research query including
+core settings, reasoning options, generation parameters, and search filters.
+
+Parameter Groups:
+    Core: query, model, system_prompt
+    Reasoning: search_mode, reasoning_effort, search_context_size
+    Generation: max_tokens, temperature, top_p, top_k, presence_penalty,
+               frequency_penalty
+    Search Filters: search_recency_filter, search_domain_filter,
+                   search_after_date_filter, search_before_date_filter
+    Output Options: return_images, return_related_questions
+    Control: stream`
+} as const;
+
+export const PerplexityDeepResearchResponseSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            title: 'Id',
+            description: 'Unique identifier for this response'
+        },
+        model: {
+            type: 'string',
+            title: 'Model',
+            description: 'Model used for the response'
+        },
+        created: {
+            type: 'integer',
+            title: 'Created',
+            description: 'Unix timestamp of response creation',
+            default: 0
+        },
+        object: {
+            type: 'string',
+            title: 'Object',
+            description: 'Object type (chat.completion)',
+            default: 'chat.completion'
+        },
+        choices: {
+            items: {
+                '$ref': '#/components/schemas/PerplexityChoice'
+            },
+            type: 'array',
+            title: 'Choices',
+            description: 'List of response choices'
+        },
+        citations: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Citations',
+            description: 'List of citation URLs referenced in the response'
+        },
+        search_results: {
+            items: {
+                '$ref': '#/components/schemas/PerplexitySearchResult'
+            },
+            type: 'array',
+            title: 'Search Results',
+            description: 'Detailed search results with snippets'
+        },
+        images: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Images',
+            description: 'Image URLs included in the response'
+        },
+        videos: {
+            items: {
+                '$ref': '#/components/schemas/PerplexityVideo'
+            },
+            type: 'array',
+            title: 'Videos',
+            description: 'Video results included in the response'
+        },
+        related_questions: {
+            items: {
+                type: 'string'
+            },
+            type: 'array',
+            title: 'Related Questions',
+            description: 'Related follow-up questions'
+        },
+        usage: {
+            anyOf: [
+                {
+                    '$ref': '#/components/schemas/PerplexityUsage'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            description: 'Token usage information'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['id', 'model'],
+    title: 'PerplexityDeepResearchResponse',
+    description: `Response schema for Perplexity Sonar deep research queries.
+
+Contains the model response with choices, citations, usage information,
+and optional images and related questions.`
+} as const;
+
+export const PerplexityMessageSchema = {
+    properties: {
+        role: {
+            type: 'string',
+            title: 'Role',
+            description: 'Role of the message author (assistant, user, system)',
+            default: 'assistant'
+        },
+        content: {
+            type: 'string',
+            title: 'Content',
+            description: 'Text content of the message',
+            default: ''
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    title: 'PerplexityMessage',
+    description: `Message content from Perplexity response.
+
+Contains the role and content of a message in the conversation.`
+} as const;
+
+export const PerplexityReasoningEffortSchema = {
+    type: 'string',
+    enum: ['low', 'medium', 'high'],
+    title: 'PerplexityReasoningEffort',
+    description: `Reasoning effort levels for Perplexity reasoning models.
+
+Controls the depth of reasoning applied to complex queries.
+
+Attributes:
+    LOW: Quick responses with minimal reasoning.
+    MEDIUM: Balanced reasoning for general queries.
+    HIGH: Deep reasoning for complex analytical tasks.`
+} as const;
+
+export const PerplexityRecencyFilterSchema = {
+    type: 'string',
+    enum: ['hour', 'day', 'week', 'month'],
+    title: 'PerplexityRecencyFilter',
+    description: `Recency filter options for search results.
+
+Filters search results to content published within the specified timeframe.
+
+Attributes:
+    HOUR: Content from the last hour.
+    DAY: Content from the last 24 hours.
+    WEEK: Content from the last 7 days.
+    MONTH: Content from the last 30 days.`
+} as const;
+
+export const PerplexitySearchContextSizeSchema = {
+    type: 'string',
+    enum: ['low', 'medium', 'high'],
+    title: 'PerplexitySearchContextSize',
+    description: `Search context size options for Perplexity Sonar API.
+
+Controls the amount of search context included in the response.
+
+Attributes:
+    LOW: Minimal context for faster responses.
+    MEDIUM: Balanced context size.
+    HIGH: Maximum context for comprehensive answers.`
+} as const;
+
+export const PerplexitySearchModeSchema = {
+    type: 'string',
+    enum: ['auto', 'news', 'academic', 'social'],
+    title: 'PerplexitySearchMode',
+    description: `Search mode options for Perplexity Sonar API.
+
+Controls the type of search performed for the query.
+
+Attributes:
+    AUTO: Automatic mode selection based on query content.
+    NEWS: Focus on recent news articles and updates.
+    ACADEMIC: Prioritize scholarly sources like peer-reviewed papers.
+    SOCIAL: Include social media and community discussions.`
+} as const;
+
+export const PerplexitySearchResultSchema = {
+    properties: {
+        url: {
+            type: 'string',
+            title: 'Url',
+            description: 'URL of the source page'
+        },
+        title: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Title',
+            description: 'Title of the source page'
+        },
+        snippet: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Snippet',
+            description: 'Content snippet from the source'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['url'],
+    title: 'PerplexitySearchResult',
+    description: `Individual search result citation from Perplexity response.
+
+Represents a single source citation with URL, title, and content snippet.`
+} as const;
+
+export const PerplexityUsageSchema = {
+    properties: {
+        prompt_tokens: {
+            type: 'integer',
+            title: 'Prompt Tokens',
+            description: 'Number of tokens in the prompt',
+            default: 0
+        },
+        completion_tokens: {
+            type: 'integer',
+            title: 'Completion Tokens',
+            description: 'Number of tokens in the completion',
+            default: 0
+        },
+        total_tokens: {
+            type: 'integer',
+            title: 'Total Tokens',
+            description: 'Total tokens used in the request',
+            default: 0
+        },
+        search_context_size: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Search Context Size',
+            description: 'Search context size used for the request'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    title: 'PerplexityUsage',
+    description: `Token usage information from Perplexity API response.
+
+Contains token counts for monitoring API usage and costs.`
+} as const;
+
+export const PerplexityVideoSchema = {
+    properties: {
+        url: {
+            type: 'string',
+            title: 'Url',
+            description: 'URL of the video'
+        },
+        title: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Title',
+            description: 'Title of the video'
+        },
+        thumbnail: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Thumbnail',
+            description: 'URL of the video thumbnail'
+        }
+    },
+    additionalProperties: true,
+    type: 'object',
+    required: ['url'],
+    title: 'PerplexityVideo',
+    description: `Video result from Perplexity search.
+
+Represents a video found during search with URL and metadata.`
 } as const;
 
 export const PrivateUserCreateSchema = {

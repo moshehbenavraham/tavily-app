@@ -6,6 +6,8 @@ import {
   Home,
   Network,
   Search,
+  Sparkles,
+  Telescope,
   Users,
 } from "lucide-react"
 
@@ -40,7 +42,16 @@ const tavilyItems: Item[] = [
   { icon: Network, title: "Map", path: "/map" },
 ]
 
-function TavilyNav({ items }: { items: Item[] }) {
+const deepResearchItems: Item[] = [
+  {
+    icon: Sparkles,
+    title: "Perplexity Research",
+    path: "/perplexity-research",
+  },
+  { icon: Telescope, title: "Gemini Research", path: "/gemini-research" },
+]
+
+function NavGroup({ label, items }: { label: string; items: Item[] }) {
   const { isMobile, setOpenMobile } = useSidebar()
   const router = useRouterState()
   const currentPath = router.location.pathname
@@ -53,7 +64,7 @@ function TavilyNav({ items }: { items: Item[] }) {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Tavily</SidebarGroupLabel>
+      <SidebarGroupLabel>{label}</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => {
@@ -94,7 +105,8 @@ export function AppSidebar() {
       </SidebarHeader>
       <SidebarContent>
         <Main items={items} />
-        <TavilyNav items={tavilyItems} />
+        <NavGroup label="Tavily" items={tavilyItems} />
+        <NavGroup label="Deep Research" items={deepResearchItems} />
       </SidebarContent>
       <SidebarFooter>
         <SidebarAppearance />

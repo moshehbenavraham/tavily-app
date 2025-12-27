@@ -95,9 +95,7 @@ class PerplexityService:
             Dictionary formatted for the Perplexity API.
         """
         # Build messages array with user query
-        messages: list[dict[str, str]] = [
-            {"role": "user", "content": request.query}
-        ]
+        messages: list[dict[str, str]] = [{"role": "user", "content": request.query}]
 
         # Add system prompt if provided
         if request.system_prompt:

@@ -243,8 +243,8 @@ This system delivers the product via phases. Each phase is implemented via multi
 | 00 | Core Setup | 6 | Complete |
 | 01 | Frontend Integration | 6 | Complete |
 | 02 | Saving Results to Items | 3 | Complete |
-| 03 | Deep Research Backend | 6 | Not Started |
-| 04 | Deep Research Frontend | TBD | Not Started |
+| 03 | Deep Research Backend | 6 | Complete |
+| 04 | Deep Research Frontend | 6 | Not Started |
 
 ## Phase 00: Core Setup - COMPLETE
 
@@ -382,11 +382,18 @@ Session specifications in `.spec_system/PRD/phase_03/`.
 5. Create progress tracking UI for Gemini async workflow
 6. Add navigation and integrate with existing patterns
 
-### Sessions (To Be Defined)
+### Sessions
 
-Sessions are defined via `/phasebuild` as `session_NN_name.md` stubs under `.spec_system/PRD/phase_04/`.
+| Session | Name | Est. Tasks |
+|---------|------|------------|
+| 01 | SDK Client and Navigation | ~20 |
+| 02 | Perplexity Hooks and Schema | ~20 |
+| 03 | Gemini Hooks and Schema | ~25 |
+| 04 | Perplexity Page and Components | ~25 |
+| 05 | Gemini Page and Components | ~25 |
+| 06 | Save Integration and Polish | ~20 |
 
-**Note**: Run `/phasebuild` to create phase directory and session stubs.
+Session specifications in `.spec_system/PRD/phase_04/`.
 
 ### Component Summary
 

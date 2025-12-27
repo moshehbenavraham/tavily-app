@@ -3,7 +3,158 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, TavilySearchData, TavilySearchResponse, TavilyExtractData, TavilyExtractResponse, TavilyCrawlData, TavilyCrawlResponse, TavilyMapUrlsData, TavilyMapUrlsResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { GeminiDeepResearchSyncData, GeminiDeepResearchSyncResponse, GeminiStartDeepResearchData, GeminiStartDeepResearchResponse, GeminiPollDeepResearchData, GeminiPollDeepResearchResponse, GeminiCancelDeepResearchData, GeminiCancelDeepResearchResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PerplexityDeepResearchData, PerplexityDeepResearchResponse2, PrivateCreateUserData, PrivateCreateUserResponse, TavilySearchData, TavilySearchResponse, TavilyExtractData, TavilyExtractResponse, TavilyCrawlData, TavilyCrawlResponse, TavilyMapUrlsData, TavilyMapUrlsResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+
+export class GeminiService {
+    /**
+     * Deep Research Sync
+     * Execute a deep research query and wait for completion.
+     *
+     * Starts a deep research job and blocks until the job reaches a terminal
+     * state (completed, failed, or cancelled). This is a convenience endpoint
+     * for clients that prefer a synchronous workflow.
+     *
+     * Note: This endpoint may take 20-60 minutes to complete for complex queries.
+     * Consider using the async workflow (POST + polling) for better control.
+     *
+     * Args:
+     * _current_user: Authenticated user (required for authorization).
+     * gemini: Injected GeminiService instance.
+     * request: Deep research request with query and optional parameters.
+     *
+     * Returns:
+     * GeminiDeepResearchResultResponse with final status and results.
+     *
+     * Raises:
+     * GeminiAPIError: If the job fails or polling exceeds max attempts.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns GeminiDeepResearchResultResponse Successful Response
+     * @throws ApiError
+     */
+    public static deepResearchSync(data: GeminiDeepResearchSyncData): CancelablePromise<GeminiDeepResearchSyncResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/gemini/deep-research/sync',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Start Deep Research
+     * Start a new deep research job.
+     *
+     * Submits a research query to the Gemini API and returns immediately with
+     * an interaction ID. Use the poll endpoint to check job status and retrieve
+     * results when complete.
+     *
+     * Args:
+     * _current_user: Authenticated user (required for authorization).
+     * gemini: Injected GeminiService instance.
+     * request: Deep research request with query and optional parameters.
+     *
+     * Returns:
+     * GeminiDeepResearchJobResponse with interaction_id and initial status.
+     *
+     * Raises:
+     * GeminiAPIError: If the API request fails for any reason.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns GeminiDeepResearchJobResponse Successful Response
+     * @throws ApiError
+     */
+    public static startDeepResearch(data: GeminiStartDeepResearchData): CancelablePromise<GeminiStartDeepResearchResponse> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/gemini/deep-research',
+            body: data.requestBody,
+            mediaType: 'application/json',
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Poll Deep Research
+     * Poll for deep research job status and results.
+     *
+     * Retrieves the current status and any available outputs from a running
+     * research job. The last_event_id parameter enables reconnection after
+     * network interruption, allowing clients to resume from where they left off.
+     *
+     * Args:
+     * _current_user: Authenticated user (required for authorization).
+     * gemini: Injected GeminiService instance.
+     * interaction_id: The interaction ID from job creation.
+     * last_event_id: Optional ID of last received event for reconnection.
+     *
+     * Returns:
+     * GeminiDeepResearchResultResponse with current status and outputs.
+     *
+     * Raises:
+     * GeminiAPIError: If the interaction is not found or polling fails.
+     * @param data The data for the request.
+     * @param data.interactionId
+     * @param data.lastEventId
+     * @returns GeminiDeepResearchResultResponse Successful Response
+     * @throws ApiError
+     */
+    public static pollDeepResearch(data: GeminiPollDeepResearchData): CancelablePromise<GeminiPollDeepResearchResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/gemini/deep-research/{interaction_id}',
+            path: {
+                interaction_id: data.interactionId
+            },
+            query: {
+                last_event_id: data.lastEventId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Cancel Deep Research
+     * Cancel a running deep research job.
+     *
+     * Terminates a running research job. Returns successfully if the job was
+     * cancelled or was already in a terminal state.
+     *
+     * Args:
+     * _current_user: Authenticated user (required for authorization).
+     * gemini: Injected GeminiService instance.
+     * interaction_id: The interaction ID of the job to cancel.
+     *
+     * Returns:
+     * Success message confirming cancellation.
+     *
+     * Raises:
+     * GeminiAPIError: If the cancellation request fails.
+     * @param data The data for the request.
+     * @param data.interactionId
+     * @returns string Successful Response
+     * @throws ApiError
+     */
+    public static cancelDeepResearch(data: GeminiCancelDeepResearchData): CancelablePromise<GeminiCancelDeepResearchResponse> {
+        return __request(OpenAPI, {
+            method: 'DELETE',
+            url: '/api/v1/gemini/deep-research/{interaction_id}',
+            path: {
+                interaction_id: data.interactionId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
 
 export class ItemsService {
     /**
@@ -208,6 +359,42 @@ export class LoginService {
             path: {
                 email: data.email
             },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class PerplexityService {
+    /**
+     * Deep Research
+     * Execute a deep research query using Perplexity Sonar API.
+     *
+     * Performs a deep research query with the provided parameters, returning
+     * a comprehensive response with citations and search results.
+     *
+     * Args:
+     * _current_user: Authenticated user (required for authorization).
+     * perplexity: Injected PerplexityService instance.
+     * request: Deep research request with query and optional parameters.
+     *
+     * Returns:
+     * PerplexityDeepResearchResponse with model response and citations.
+     *
+     * Raises:
+     * PerplexityAPIError: If the Perplexity API request fails.
+     * @param data The data for the request.
+     * @param data.requestBody
+     * @returns PerplexityDeepResearchResponse Successful Response
+     * @throws ApiError
+     */
+    public static deepResearch(data: PerplexityDeepResearchData): CancelablePromise<PerplexityDeepResearchResponse2> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/v1/perplexity/deep-research',
+            body: data.requestBody,
+            mediaType: 'application/json',
             errors: {
                 422: 'Validation Error'
             }

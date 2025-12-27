@@ -143,6 +143,180 @@ export type ExtractResult = {
     [key: string]: unknown | string;
 };
 
+/**
+ * Response schema for Gemini deep research job creation.
+ *
+ * Returned immediately after submitting a new deep research request.
+ * Contains the interaction ID needed for subsequent polling.
+ */
+export type GeminiDeepResearchJobResponse = {
+    /**
+     * Unique identifier for this research interaction
+     */
+    interaction_id: string;
+    /**
+     * Initial status of the job (typically pending)
+     */
+    status?: GeminiInteractionStatus;
+    /**
+     * Timestamp when the job was created
+     */
+    created_at: string;
+    [key: string]: unknown | string | GeminiInteractionStatus;
+};
+
+/**
+ * Request schema for initiating a Gemini deep research job.
+ *
+ * Contains all parameters for submitting a new deep research query.
+ * The job runs asynchronously and returns an interaction ID for polling.
+ *
+ * Parameter Groups:
+ * Core: query (required)
+ * Options: enable_thinking_summaries, file_search_store_names
+ * Continuation: previous_interaction_id
+ */
+export type GeminiDeepResearchRequest = {
+    /**
+     * The research query to investigate
+     */
+    query: string;
+    /**
+     * Include thinking/reasoning summaries in responses
+     */
+    enable_thinking_summaries?: boolean;
+    /**
+     * Names of file stores to search for context
+     */
+    file_search_store_names?: (Array<(string)> | null);
+    /**
+     * ID of previous interaction for continuation
+     */
+    previous_interaction_id?: (string | null);
+};
+
+/**
+ * Response schema for Gemini deep research polling results.
+ *
+ * Contains the current status and any available results from polling.
+ * When status is COMPLETED, outputs and usage will be populated.
+ */
+export type GeminiDeepResearchResultResponse = {
+    /**
+     * Current status of the research job
+     */
+    status: GeminiInteractionStatus;
+    /**
+     * List of output segments from the research
+     */
+    outputs?: Array<GeminiOutput>;
+    /**
+     * Token usage information (available on completion)
+     */
+    usage?: (GeminiUsage | null);
+    /**
+     * Timestamp when the job completed (if applicable)
+     */
+    completed_at?: (string | null);
+    /**
+     * ID of this event for reconnection tracking
+     */
+    event_id?: (string | null);
+    /**
+     * Type of streaming event (if applicable)
+     */
+    event_type?: (GeminiStreamEventType | null);
+    /**
+     * Error message if status is FAILED
+     */
+    error_message?: (string | null);
+    [key: string]: unknown | GeminiInteractionStatus | GeminiOutput;
+};
+
+/**
+ * Delta types for incremental response updates.
+ *
+ * Categorizes the type of content in incremental streaming updates.
+ *
+ * Attributes:
+ * TEXT: Text content delta.
+ * TOOL_CALL: Tool/function call delta.
+ * STATUS: Status change delta.
+ */
+export type GeminiDeltaType = 'text' | 'tool_call' | 'status';
+
+/**
+ * Status states for Gemini deep research interactions.
+ *
+ * Represents the lifecycle states of an async deep research job from
+ * submission through completion or failure.
+ *
+ * Attributes:
+ * PENDING: Job submitted but not yet started processing.
+ * RUNNING: Job is actively being processed.
+ * COMPLETED: Job finished successfully with results available.
+ * FAILED: Job encountered an error and could not complete.
+ * CANCELLED: Job was cancelled before completion.
+ */
+export type GeminiInteractionStatus = 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+
+/**
+ * Individual output segment from Gemini deep research response.
+ *
+ * Represents a content segment which may include text, thinking summaries,
+ * or tool call results.
+ */
+export type GeminiOutput = {
+    /**
+     * Text content of this output segment
+     */
+    content?: string;
+    /**
+     * Summary of reasoning/thinking for this segment
+     */
+    thinking_summary?: (string | null);
+    /**
+     * Type of content in this output (text, tool_call, status)
+     */
+    delta_type?: GeminiDeltaType;
+    [key: string]: unknown | string | GeminiDeltaType;
+};
+
+/**
+ * Event types for Gemini streaming responses during polling.
+ *
+ * Identifies the type of event received when polling for job progress,
+ * enabling clients to handle different event types appropriately.
+ *
+ * Attributes:
+ * THINKING_UPDATE: Progress update on reasoning/thinking process.
+ * RESEARCH_UPDATE: Progress update on research gathering.
+ * FINAL_RESULT: Final result payload with complete response.
+ * ERROR: Error event indicating job failure.
+ */
+export type GeminiStreamEventType = 'thinking_update' | 'research_update' | 'final_result' | 'error';
+
+/**
+ * Token usage information from Gemini API response.
+ *
+ * Contains token counts for monitoring API usage and costs.
+ */
+export type GeminiUsage = {
+    /**
+     * Number of tokens in the input prompt
+     */
+    input_tokens?: number;
+    /**
+     * Number of tokens in the generated output
+     */
+    output_tokens?: number;
+    /**
+     * Total tokens used in the request
+     */
+    total_tokens?: number;
+    [key: string]: unknown | number;
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -252,6 +426,310 @@ export type Message = {
 export type NewPassword = {
     token: string;
     new_password: string;
+};
+
+/**
+ * Individual choice from Perplexity response.
+ *
+ * Represents one possible response from the model.
+ */
+export type PerplexityChoice = {
+    /**
+     * Index of this choice in the list
+     */
+    index?: number;
+    /**
+     * The message content for this choice
+     */
+    message: PerplexityMessage;
+    /**
+     * Reason the model stopped generating (stop, length, etc.)
+     */
+    finish_reason?: (string | null);
+    [key: string]: unknown | number | PerplexityMessage;
+};
+
+/**
+ * Request schema for Perplexity Sonar deep research queries.
+ *
+ * Contains all parameters for performing a deep research query including
+ * core settings, reasoning options, generation parameters, and search filters.
+ *
+ * Parameter Groups:
+ * Core: query, model, system_prompt
+ * Reasoning: search_mode, reasoning_effort, search_context_size
+ * Generation: max_tokens, temperature, top_p, top_k, presence_penalty,
+ * frequency_penalty
+ * Search Filters: search_recency_filter, search_domain_filter,
+ * search_after_date_filter, search_before_date_filter
+ * Output Options: return_images, return_related_questions
+ * Control: stream
+ */
+export type PerplexityDeepResearchRequest = {
+    /**
+     * The research query to answer
+     */
+    query: string;
+    /**
+     * Perplexity model to use (sonar, sonar-pro, sonar-reasoning)
+     */
+    model?: string;
+    /**
+     * System prompt to guide the model behavior
+     */
+    system_prompt?: (string | null);
+    /**
+     * Search mode (auto, news, academic, social)
+     */
+    search_mode?: (PerplexitySearchMode | null);
+    /**
+     * Reasoning effort level for reasoning models
+     */
+    reasoning_effort?: (PerplexityReasoningEffort | null);
+    /**
+     * Amount of search context to include
+     */
+    search_context_size?: (PerplexitySearchContextSize | null);
+    /**
+     * Maximum tokens in the response (1-16384)
+     */
+    max_tokens?: (number | null);
+    /**
+     * Sampling temperature (0.0-2.0)
+     */
+    temperature?: (number | null);
+    /**
+     * Nucleus sampling probability (0.0-1.0)
+     */
+    top_p?: (number | null);
+    /**
+     * Top-k sampling parameter
+     */
+    top_k?: (number | null);
+    /**
+     * Presence penalty (-2.0 to 2.0)
+     */
+    presence_penalty?: (number | null);
+    /**
+     * Frequency penalty (-2.0 to 2.0)
+     */
+    frequency_penalty?: (number | null);
+    /**
+     * Filter results by recency (hour, day, week, month)
+     */
+    search_recency_filter?: (PerplexityRecencyFilter | null);
+    /**
+     * Domains to include/exclude (prefix with - to exclude)
+     */
+    search_domain_filter?: (Array<(string)> | null);
+    /**
+     * Only include content after this date (MM/DD/YYYY format)
+     */
+    search_after_date_filter?: (string | null);
+    /**
+     * Only include content before this date (MM/DD/YYYY format)
+     */
+    search_before_date_filter?: (string | null);
+    /**
+     * Include images in the response (Tier-2+ only)
+     */
+    return_images?: boolean;
+    /**
+     * Include related follow-up questions
+     */
+    return_related_questions?: boolean;
+    /**
+     * Enable streaming response
+     */
+    stream?: boolean;
+};
+
+/**
+ * Response schema for Perplexity Sonar deep research queries.
+ *
+ * Contains the model response with choices, citations, usage information,
+ * and optional images and related questions.
+ */
+export type PerplexityDeepResearchResponse = {
+    /**
+     * Unique identifier for this response
+     */
+    id: string;
+    /**
+     * Model used for the response
+     */
+    model: string;
+    /**
+     * Unix timestamp of response creation
+     */
+    created?: number;
+    /**
+     * Object type (chat.completion)
+     */
+    object?: string;
+    /**
+     * List of response choices
+     */
+    choices?: Array<PerplexityChoice>;
+    /**
+     * List of citation URLs referenced in the response
+     */
+    citations?: Array<(string)>;
+    /**
+     * Detailed search results with snippets
+     */
+    search_results?: Array<PerplexitySearchResult>;
+    /**
+     * Image URLs included in the response
+     */
+    images?: Array<(string)>;
+    /**
+     * Video results included in the response
+     */
+    videos?: Array<PerplexityVideo>;
+    /**
+     * Related follow-up questions
+     */
+    related_questions?: Array<(string)>;
+    /**
+     * Token usage information
+     */
+    usage?: (PerplexityUsage | null);
+    [key: string]: unknown | string | number | PerplexityChoice | PerplexitySearchResult | PerplexityVideo;
+};
+
+/**
+ * Message content from Perplexity response.
+ *
+ * Contains the role and content of a message in the conversation.
+ */
+export type PerplexityMessage = {
+    /**
+     * Role of the message author (assistant, user, system)
+     */
+    role?: string;
+    /**
+     * Text content of the message
+     */
+    content?: string;
+    [key: string]: unknown | string;
+};
+
+/**
+ * Reasoning effort levels for Perplexity reasoning models.
+ *
+ * Controls the depth of reasoning applied to complex queries.
+ *
+ * Attributes:
+ * LOW: Quick responses with minimal reasoning.
+ * MEDIUM: Balanced reasoning for general queries.
+ * HIGH: Deep reasoning for complex analytical tasks.
+ */
+export type PerplexityReasoningEffort = 'low' | 'medium' | 'high';
+
+/**
+ * Recency filter options for search results.
+ *
+ * Filters search results to content published within the specified timeframe.
+ *
+ * Attributes:
+ * HOUR: Content from the last hour.
+ * DAY: Content from the last 24 hours.
+ * WEEK: Content from the last 7 days.
+ * MONTH: Content from the last 30 days.
+ */
+export type PerplexityRecencyFilter = 'hour' | 'day' | 'week' | 'month';
+
+/**
+ * Search context size options for Perplexity Sonar API.
+ *
+ * Controls the amount of search context included in the response.
+ *
+ * Attributes:
+ * LOW: Minimal context for faster responses.
+ * MEDIUM: Balanced context size.
+ * HIGH: Maximum context for comprehensive answers.
+ */
+export type PerplexitySearchContextSize = 'low' | 'medium' | 'high';
+
+/**
+ * Search mode options for Perplexity Sonar API.
+ *
+ * Controls the type of search performed for the query.
+ *
+ * Attributes:
+ * AUTO: Automatic mode selection based on query content.
+ * NEWS: Focus on recent news articles and updates.
+ * ACADEMIC: Prioritize scholarly sources like peer-reviewed papers.
+ * SOCIAL: Include social media and community discussions.
+ */
+export type PerplexitySearchMode = 'auto' | 'news' | 'academic' | 'social';
+
+/**
+ * Individual search result citation from Perplexity response.
+ *
+ * Represents a single source citation with URL, title, and content snippet.
+ */
+export type PerplexitySearchResult = {
+    /**
+     * URL of the source page
+     */
+    url: string;
+    /**
+     * Title of the source page
+     */
+    title?: (string | null);
+    /**
+     * Content snippet from the source
+     */
+    snippet?: (string | null);
+    [key: string]: unknown | string;
+};
+
+/**
+ * Token usage information from Perplexity API response.
+ *
+ * Contains token counts for monitoring API usage and costs.
+ */
+export type PerplexityUsage = {
+    /**
+     * Number of tokens in the prompt
+     */
+    prompt_tokens?: number;
+    /**
+     * Number of tokens in the completion
+     */
+    completion_tokens?: number;
+    /**
+     * Total tokens used in the request
+     */
+    total_tokens?: number;
+    /**
+     * Search context size used for the request
+     */
+    search_context_size?: (string | null);
+    [key: string]: unknown | number;
+};
+
+/**
+ * Video result from Perplexity search.
+ *
+ * Represents a video found during search with URL and metadata.
+ */
+export type PerplexityVideo = {
+    /**
+     * URL of the video
+     */
+    url: string;
+    /**
+     * Title of the video
+     */
+    title?: (string | null);
+    /**
+     * URL of the video thumbnail
+     */
+    thumbnail?: (string | null);
+    [key: string]: unknown | string;
 };
 
 export type PrivateUserCreate = {
@@ -457,6 +935,33 @@ export type ValidationError = {
     type: string;
 };
 
+export type GeminiDeepResearchSyncData = {
+    requestBody: GeminiDeepResearchRequest;
+};
+
+export type GeminiDeepResearchSyncResponse = (GeminiDeepResearchResultResponse);
+
+export type GeminiStartDeepResearchData = {
+    requestBody: GeminiDeepResearchRequest;
+};
+
+export type GeminiStartDeepResearchResponse = (GeminiDeepResearchJobResponse);
+
+export type GeminiPollDeepResearchData = {
+    interactionId: string;
+    lastEventId?: (string | null);
+};
+
+export type GeminiPollDeepResearchResponse = (GeminiDeepResearchResultResponse);
+
+export type GeminiCancelDeepResearchData = {
+    interactionId: string;
+};
+
+export type GeminiCancelDeepResearchResponse = ({
+    [key: string]: (string);
+});
+
 export type ItemsReadItemsData = {
     contentType?: ('search' | 'extract' | 'crawl' | 'map' | null);
     limit?: number;
@@ -515,6 +1020,12 @@ export type LoginRecoverPasswordHtmlContentData = {
 };
 
 export type LoginRecoverPasswordHtmlContentResponse = (string);
+
+export type PerplexityDeepResearchData = {
+    requestBody: PerplexityDeepResearchRequest;
+};
+
+export type PerplexityDeepResearchResponse2 = (PerplexityDeepResearchResponse);
 
 export type PrivateCreateUserData = {
     requestBody: PrivateUserCreate;

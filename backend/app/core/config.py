@@ -298,14 +298,10 @@ class Settings(BaseSettings):
     )
 
     # Perplexity API settings (nested model)
-    perplexity: PerplexitySettings = Field(
-        default_factory=lambda: PerplexitySettings()
-    )
+    perplexity: PerplexitySettings = Field(default_factory=lambda: PerplexitySettings())
 
     # Gemini API settings (nested model)
-    gemini: GeminiSettings = Field(
-        default_factory=lambda: GeminiSettings()
-    )
+    gemini: GeminiSettings = Field(default_factory=lambda: GeminiSettings())
 
 
 settings = Settings()  # type: ignore
