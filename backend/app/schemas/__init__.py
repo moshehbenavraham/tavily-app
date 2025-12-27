@@ -4,6 +4,21 @@ This package contains all Pydantic v2 schemas used by the FastAPI application
 for request validation, response serialization, and OpenAPI documentation.
 """
 
+from app.schemas.gemini import (
+    # Response Schemas
+    GeminiDeepResearchJobResponse,
+    # Request Schemas
+    GeminiDeepResearchPollRequest,
+    GeminiDeepResearchRequest,
+    GeminiDeepResearchResultResponse,
+    # Enums
+    GeminiDeltaType,
+    GeminiInteractionStatus,
+    # Nested Models
+    GeminiOutput,
+    GeminiStreamEventType,
+    GeminiUsage,
+)
 from app.schemas.perplexity import (
     # Nested Result Models
     PerplexityChoice,
@@ -76,4 +91,17 @@ __all__ = [
     "PerplexityDeepResearchRequest",
     # Perplexity Response Schemas
     "PerplexityDeepResearchResponse",
+    # Gemini Enums
+    "GeminiInteractionStatus",
+    "GeminiStreamEventType",
+    "GeminiDeltaType",
+    # Gemini Nested Models
+    "GeminiUsage",
+    "GeminiOutput",
+    # Gemini Request Schemas
+    "GeminiDeepResearchRequest",
+    "GeminiDeepResearchPollRequest",
+    # Gemini Response Schemas
+    "GeminiDeepResearchJobResponse",
+    "GeminiDeepResearchResultResponse",
 ]
