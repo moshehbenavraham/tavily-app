@@ -1,4 +1,5 @@
 import secrets
+from enum import StrEnum
 from typing import Annotated, Any, Literal
 
 from pydantic import (
@@ -13,6 +14,52 @@ from pydantic import (
 )
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing_extensions import Self
+
+# =============================================================================
+# Perplexity API Enums
+# =============================================================================
+
+
+class PerplexityModel(StrEnum):
+    """Available Perplexity Sonar models for deep research."""
+
+    SONAR = "sonar"
+    SONAR_PRO = "sonar-pro"
+    SONAR_REASONING = "sonar-reasoning"
+    SONAR_REASONING_PRO = "sonar-reasoning-pro"
+
+
+class PerplexitySearchMode(StrEnum):
+    """Search mode options for Perplexity API."""
+
+    AUTO = "auto"
+    NEWS = "news"
+    ACADEMIC = "academic"
+    SOCIAL = "social"
+
+
+class PerplexityReasoningEffort(StrEnum):
+    """Reasoning effort levels for Perplexity reasoning models."""
+
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
+
+# =============================================================================
+# Gemini API Enums
+# =============================================================================
+
+
+class GeminiAgent(StrEnum):
+    """Available Gemini agents for research tasks."""
+
+    DEFAULT = "default"
+
+
+# =============================================================================
+# Settings Classes
+# =============================================================================
 
 
 # Tavily API configuration settings
@@ -41,6 +88,108 @@ class TavilySettings(BaseSettings):
 
     # Optional: HTTP proxy URL for API requests
     proxy: str | None = None
+
+
+# Perplexity API configuration settings
+# Used for AI-powered deep research with citations
+class PerplexitySettings(BaseSettings):
+    """Configuration for Perplexity Sonar API integration.
+
+    Environment variables:
+        PERPLEXITY_API_KEY: API key from perplexity.ai (optional)
+        PERPLEXITY_TIMEOUT: Request timeout in seconds (default: 300)
+        PERPLEXITY_DEFAULT_MODEL: Default model to use (default: sonar-pro)
+        PERPLEXITY_SEARCH_MODE: Search mode (default: auto)
+        PERPLEXITY_REASONING_EFFORT: Reasoning effort level (default: medium)
+    """
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_ignore_empty=True,
+        extra="ignore",
+        env_prefix="PERPLEXITY_",
+    )
+
+    # Optional: Perplexity API key (obtain from perplexity.ai)
+    api_key: str | None = Field(
+        default=None,
+        description="Perplexity API key for authentication",
+    )
+
+    # Request timeout in seconds (300s for deep research)
+    timeout: int = Field(
+        default=300,
+        description="Request timeout in seconds",
+    )
+
+    # Default model for research queries
+    default_model: PerplexityModel = Field(
+        default=PerplexityModel.SONAR_PRO,
+        description="Default Perplexity model to use",
+    )
+
+    # Search mode for queries
+    search_mode: PerplexitySearchMode = Field(
+        default=PerplexitySearchMode.AUTO,
+        description="Search mode for Perplexity queries",
+    )
+
+    # Reasoning effort level for reasoning models
+    reasoning_effort: PerplexityReasoningEffort = Field(
+        default=PerplexityReasoningEffort.MEDIUM,
+        description="Reasoning effort level",
+    )
+
+
+# Gemini API configuration settings
+# Used for long-running research tasks with polling
+class GeminiSettings(BaseSettings):
+    """Configuration for Google Gemini API integration.
+
+    Environment variables:
+        GEMINI_API_KEY: API key from Google AI Studio (optional)
+        GEMINI_TIMEOUT: Request timeout in seconds (default: 120)
+        GEMINI_POLL_INTERVAL: Polling interval in seconds (default: 10)
+        GEMINI_MAX_POLL_ATTEMPTS: Maximum polling attempts (default: 360)
+        GEMINI_AGENT: Agent selection (default: default)
+    """
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_ignore_empty=True,
+        extra="ignore",
+        env_prefix="GEMINI_",
+    )
+
+    # Optional: Gemini API key (obtain from Google AI Studio)
+    api_key: str | None = Field(
+        default=None,
+        description="Gemini API key for authentication",
+    )
+
+    # Request timeout in seconds (per poll request)
+    timeout: int = Field(
+        default=120,
+        description="Request timeout in seconds",
+    )
+
+    # Polling interval for long-running tasks
+    poll_interval: int = Field(
+        default=10,
+        description="Polling interval in seconds",
+    )
+
+    # Maximum polling attempts (10s * 360 = 1 hour max)
+    max_poll_attempts: int = Field(
+        default=360,
+        description="Maximum number of polling attempts",
+    )
+
+    # Agent selection
+    agent: GeminiAgent = Field(
+        default=GeminiAgent.DEFAULT,
+        description="Gemini agent to use",
+    )
 
 
 def parse_cors(v: Any) -> list[str] | str:
@@ -146,6 +295,16 @@ class Settings(BaseSettings):
     # Tavily API settings (nested model)
     tavily: TavilySettings = Field(
         default_factory=lambda: TavilySettings()  # type: ignore[call-arg]
+    )
+
+    # Perplexity API settings (nested model)
+    perplexity: PerplexitySettings = Field(
+        default_factory=lambda: PerplexitySettings()
+    )
+
+    # Gemini API settings (nested model)
+    gemini: GeminiSettings = Field(
+        default_factory=lambda: GeminiSettings()
     )
 
 

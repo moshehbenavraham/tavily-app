@@ -243,7 +243,7 @@ This system delivers the product via phases. Each phase is implemented via multi
 | 00 | Core Setup | 6 | Complete |
 | 01 | Frontend Integration | 6 | Complete |
 | 02 | Saving Results to Items | 3 | Complete |
-| 03 | Deep Research Backend | TBD | Not Started |
+| 03 | Deep Research Backend | 6 | Not Started |
 | 04 | Deep Research Frontend | TBD | Not Started |
 
 ## Phase 00: Core Setup - COMPLETE
@@ -336,11 +336,18 @@ Fields added to ItemBase:
 5. Create FastAPI routes with proper authentication
 6. Add exception handlers to main application
 
-### Sessions (To Be Defined)
+### Sessions
 
-Sessions are defined via `/phasebuild` as `session_NN_name.md` stubs under `.spec_system/PRD/phase_03/`.
+| Session | Name | Est. Tasks |
+|---------|------|------------|
+| 01 | Configuration and Environment | ~20 |
+| 02 | Perplexity Schemas and Exceptions | ~25 |
+| 03 | Gemini Schemas and Exceptions | ~25 |
+| 04 | Perplexity Service and Route | ~25 |
+| 05 | Gemini Service Implementation | ~20 |
+| 06 | Gemini Routes and Integration | ~25 |
 
-**Note**: Run `/phasebuild` to create phase directory and session stubs.
+Session specifications in `.spec_system/PRD/phase_03/`.
 
 ### API Reference
 
