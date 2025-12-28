@@ -2,7 +2,9 @@
 
 The frontend is built with [Vite](https://vitejs.dev/), [React](https://reactjs.org/), [TypeScript](https://www.typescriptlang.org/), [TanStack Query](https://tanstack.com/query), [TanStack Router](https://tanstack.com/router) and [Tailwind CSS](https://tailwindcss.com/).
 
-## Tavily Pages
+## Pages
+
+### Tavily (Web Search)
 
 | Route | File | Description |
 |-------|------|-------------|
@@ -11,7 +13,16 @@ The frontend is built with [Vite](https://vitejs.dev/), [React](https://reactjs.
 | `/crawl` | `src/routes/_layout/crawl.tsx` | Website crawling with instructions |
 | `/map` | `src/routes/_layout/map.tsx` | Sitemap generation |
 
-### Tavily Components (`src/components/Tavily/`)
+### Deep Research
+
+| Route | File | Description |
+|-------|------|-------------|
+| `/perplexity-research` | `src/routes/_layout/perplexity-research.tsx` | Perplexity Sonar deep research |
+| `/gemini-research` | `src/routes/_layout/gemini-research.tsx` | Gemini async research with polling |
+
+## Components
+
+### Tavily (`src/components/Tavily/`)
 
 - **SearchForm** - Search query with topic, depth, and domain filters
 - **SearchResultCard** - Individual result with title, snippet, source
@@ -21,6 +32,36 @@ The frontend is built with [Vite](https://vitejs.dev/), [React](https://reactjs.
 - **CrawlResultCard** - Crawled page content display
 - **MapForm** - Sitemap generation parameters
 - **MapResultsList** - Discovered URLs list
+
+### Perplexity (`src/components/Perplexity/`)
+
+- **PerplexityDeepResearchForm** - Research query with options
+- **PerplexityResultView** - Markdown report display
+- **PerplexityCitationsList** - Source citations list
+- **PerplexityUsageStats** - Token usage display
+
+### Gemini (`src/components/Gemini/`)
+
+- **GeminiDeepResearchForm** - Research query with options
+- **GeminiResultView** - Markdown report with outputs
+- **GeminiProgressIndicator** - Polling status and elapsed time
+- **GeminiCancelButton** - Cancel in-progress research
+- **GeminiUsageStats** - Token usage display
+
+### Items (`src/components/Items/`)
+
+- **ContentTypeBadge** - Type badge (search, extract, crawl, map, perplexity, gemini)
+- **ContentTypeFilter** - Filter by content type
+
+## Hooks
+
+| Hook | File | Purpose |
+|------|------|---------|
+| `useSaveToItems` | `hooks/useSaveToItems.ts` | Save results to Items |
+| `usePerplexityDeepResearch` | `hooks/usePerplexityDeepResearch.ts` | Perplexity mutation |
+| `useGeminiStartResearch` | `hooks/useGeminiDeepResearch.ts` | Start Gemini job |
+| `useGeminiPollResearch` | `hooks/useGeminiDeepResearch.ts` | Poll Gemini status |
+| `useGeminiCancelResearch` | `hooks/useGeminiDeepResearch.ts` | Cancel Gemini job |
 
 ## Frontend development
 

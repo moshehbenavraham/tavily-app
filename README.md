@@ -1,19 +1,12 @@
 # tavily-app
 
-AI-powered search application integrating the Tavily API with a FastAPI backend and React frontend.
+AI-powered research application integrating Tavily, Perplexity Sonar, and Google Gemini APIs with a FastAPI backend and React frontend.
 
 ## Quick Start
 
 ```bash
 # Start the full stack with Docker Compose
 docker compose up -d
-
-# Or run backend and frontend separately:
-# Backend
-cd backend && uv sync && source .venv/bin/activate && fastapi dev app/main.py
-
-# Frontend
-cd frontend && npm install && npm run dev
 ```
 
 Access the app at http://localhost:5179
@@ -22,26 +15,28 @@ Access the app at http://localhost:5179
 
 ```
 .
-├── backend/           # FastAPI backend with Tavily integration
+├── backend/           # FastAPI backend with API integrations
 │   ├── app/
-│   │   ├── api/routes/tavily.py   # Tavily API endpoints
-│   │   ├── schemas/tavily.py      # Request/response models
-│   │   └── services/tavily.py     # TavilyService class
-│   └── tests/         # pytest tests
+│   │   ├── api/routes/     # Tavily, Perplexity, Gemini endpoints
+│   │   ├── schemas/        # Pydantic request/response models
+│   │   └── services/       # Service classes for each API
+│   └── tests/              # pytest tests
 ├── frontend/          # React 19 + TypeScript frontend
 │   ├── src/
-│   │   ├── client/    # Generated OpenAPI client
-│   │   ├── components/
-│   │   └── routes/
-│   └── tests/         # Playwright e2e tests
+│   │   ├── client/         # Generated OpenAPI client
+│   │   ├── components/     # Tavily, Perplexity, Gemini components
+│   │   └── routes/         # Page routes
+│   └── tests/              # Playwright e2e tests
 ├── docs/              # Reference documentation
 ├── scripts/           # Development scripts
 └── .spec_system/      # Project specifications and PRD
 ```
 
-## Tavily API Endpoints
+## API Endpoints
 
 All endpoints require JWT authentication.
+
+### Tavily (Web Search)
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
@@ -50,10 +45,27 @@ All endpoints require JWT authentication.
 | `/api/v1/tavily/crawl` | POST | Crawl website with instructions |
 | `/api/v1/tavily/map` | POST | Generate sitemap from URL |
 
+### Perplexity (Deep Research - Synchronous)
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/perplexity/deep-research` | POST | AI-powered research with citations |
+
+### Gemini (Deep Research - Asynchronous)
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/api/v1/gemini/deep-research` | POST | Start async research job |
+| `/api/v1/gemini/deep-research/{id}` | GET | Poll research status |
+| `/api/v1/gemini/deep-research/{id}` | DELETE | Cancel research |
+| `/api/v1/gemini/deep-research/sync` | POST | Blocking wait for completion |
+
 ## Documentation
 
 - [Development Guide](development.md) - Local setup and Docker workflow
 - [Deployment Guide](deployment.md) - Production deployment with Traefik
+- [Architecture](docs/ARCHITECTURE.md) - System design and data flow
+- [Onboarding](docs/onboarding.md) - New developer checklist
 - [Backend README](backend/README_backend.md) - Backend-specific docs
 - [Frontend README](frontend/README_frontend.md) - Frontend-specific docs
 - [Contributing](CONTRIBUTING.md) - Contribution guidelines
@@ -63,17 +75,16 @@ All endpoints require JWT authentication.
 ### Backend
 - **FastAPI** - Python web framework
 - **tavily-python** - Official Tavily SDK
+- **httpx** - Async HTTP client for Perplexity/Gemini
 - **SQLModel** - ORM for PostgreSQL
 - **Pydantic** - Data validation
-- **pytest** - Testing framework
 
 ### Frontend
 - **React 19** - UI framework
 - **TypeScript** - Type safety
-- **TanStack Router/Query** - Routing and data fetching
+- **TanStack Router/Query** - Routing, data fetching, polling
 - **shadcn/ui** - Component library
 - **Tailwind CSS** - Styling
-- **Playwright** - E2E testing
 
 ## Environment Variables
 
@@ -82,6 +93,8 @@ Copy `.env.example` to `.env` and configure:
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `TAVILY_API_KEY` | Yes | Tavily API key from https://tavily.com |
+| `PERPLEXITY_API_KEY` | For deep research | Perplexity API key from https://perplexity.ai |
+| `GEMINI_API_KEY` | For deep research | Gemini API key from https://ai.google.dev |
 | `SECRET_KEY` | Yes | JWT signing key |
 | `POSTGRES_PASSWORD` | Yes | Database password |
 | `FIRST_SUPERUSER_PASSWORD` | Yes | Initial admin password |
@@ -93,8 +106,10 @@ Copy `.env.example` to `.env` and configure:
 | 00 | Core Setup | 6 | Complete |
 | 01 | Frontend Integration | 6 | Complete |
 | 02 | Saving Results to Items | 3 | Complete |
+| 03 | Deep Research Backend | 6 | Complete |
+| 04 | Deep Research Frontend | 6 | Complete |
 
-All 15 sessions across 3 phases are complete. See [PRD](.spec_system/PRD/PRD.md) for details.
+All 27 sessions across 5 phases are complete. See [PRD](.spec_system/PRD/PRD.md) for details.
 
 ## License
 

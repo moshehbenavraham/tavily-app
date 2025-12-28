@@ -1,0 +1,26 @@
+AUDIT REPORT | tavily-app | 2025-12-28 00:13
+Git: clean | Stack(s): Python 3.12 + FastAPI, TypeScript + React 19 + Vite
+Conventions: loaded (174 lines)
+
+[SETUP] Backend: uv | Linter: ruff (ok) | Fmt: ruff (ok) | Types: mypy (ok)
+[SETUP] Frontend: npm | Linter: biome (ok) | Fmt: biome (ok) | Types: tsc (ok)
+
+[backend]
+  Fmt: 0 fixed (55 files unchanged) | Lint: 0 issues | Types: 0 errors (37 files)
+  Tests: SKIP - requires PostgreSQL database (85 tests errored: connection refused)
+
+[frontend]
+  Fmt: 0 fixed | Lint: 0 issues (128 files checked) | Types: 0 errors
+  Tests: SKIP - playwright e2e tests require running application
+
+[CONVENTIONS] 174/300 lines | +0 -0 ~0
+  No changes needed - conventions are current and accurately reflect codebase
+
+SUMMARY: P1 ok | P2 0/0 fixed, 0 remain | P3 skip (no db) | P4 ok
+TODO:
+  - Start PostgreSQL to run backend tests: docker-compose up -d db
+  - Run backend tests: cd backend && uv run pytest -v -m "not integration"
+  - Start app for frontend e2e tests: docker-compose up -d
+
+Audit is CLEAN for code quality (lint, format, types all pass).
+Recommend running /carryforward if ready to close a phase.

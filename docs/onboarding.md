@@ -10,6 +10,8 @@ Zero-to-hero checklist for new developers.
 - [ ] Node.js 20+ installed (via nvm or fnm)
 - [ ] Git configured with SSH key
 - [ ] Tavily API key from https://tavily.com
+- [ ] Perplexity API key from https://perplexity.ai (optional, for deep research)
+- [ ] Gemini API key from https://ai.google.dev (optional, for deep research)
 
 ## Setup Steps
 
@@ -31,6 +33,8 @@ Edit `.env` with your values:
 | Variable | Where to Get | Description |
 |----------|--------------|-------------|
 | `TAVILY_API_KEY` | https://tavily.com | Tavily API access |
+| `PERPLEXITY_API_KEY` | https://perplexity.ai | Deep research (optional) |
+| `GEMINI_API_KEY` | https://ai.google.dev | Deep research (optional) |
 | `SECRET_KEY` | Generate with Python | JWT signing key |
 | `POSTGRES_PASSWORD` | Create your own | Database password |
 | `FIRST_SUPERUSER_PASSWORD` | Create your own | Initial admin account |

@@ -1,7 +1,7 @@
 # Considerations
 
 > Institutional memory for AI assistants. Updated between phases via /carryforward.
-> **Line budget**: 600 max | **Last updated**: Phase 03 (2025-12-27)
+> **Line budget**: 600 max | **Last updated**: Phase 04 (2025-12-28)
 
 ---
 
@@ -17,11 +17,7 @@ Items requiring attention in upcoming phases. Review before each session.
 
 ### External Dependencies
 
-- [P03] **Perplexity API latency**: Deep research queries take 30-60 seconds; timeout configured at 300s. Frontend must implement loading states for long operations.
-
-- [P03] **Gemini polling duration**: Research jobs can run up to 60 minutes (typical ~20 min). Frontend needs progress indicators and reconnection support via last_event_id.
-
-- [P03] **API rate limits**: Both Perplexity and Gemini have rate limits. 429 handling implemented in exception classes but frontend should provide user feedback.
+- [P03] **API rate limits**: Perplexity and Gemini have rate limits. 429 handling implemented in exception classes. Frontend provides toast feedback but could add retry mechanisms.
 
 ### Performance / Security
 
@@ -29,9 +25,7 @@ Items requiring attention in upcoming phases. Review before each session.
 
 ### Architecture
 
-- [P03] **Sync vs async API patterns**: Perplexity uses synchronous POST, Gemini uses async polling. Frontend must handle both patterns differently.
-
-- [P02] **Item model extended**: Item model now supports multiple source_types (search, extract, crawl, map). New types (perplexity, gemini) may need to be added for deep research results.
+- [P04] **Large response rendering**: Deep research reports can be extensive (Gemini especially). Consider virtualization or pagination for very long markdown content.
 
 ---
 
@@ -63,6 +57,16 @@ Proven patterns and anti-patterns. Reference during implementation.
 
 - [P03] **Progressive session structure**: Config -> Schemas -> Service -> Routes progression ensures each session builds on validated previous work. Dependencies are always satisfied.
 
+- [P04] **Frontend polling with refetchInterval**: TanStack Query's refetchInterval with enabled flag provides clean polling. Set `enabled: !!interactionId && !isTerminal` to auto-stop on completion.
+
+- [P04] **Terminal status detection pattern**: Define `isTerminalStatus(status)` helper that checks for COMPLETED, FAILED, CANCELLED. Use in both polling logic and UI state.
+
+- [P04] **Mapper functions for save integration**: Create dedicated functions like `mapPerplexityToItem()` and `mapGeminiToItem()` to transform API responses into Item format. Keeps save logic clean and testable.
+
+- [P04] **SDK client regeneration workflow**: Use `npx openapi-typescript-codegen` after backend changes. Generates typed client from OpenAPI spec automatically.
+
+- [P04] **Content type extension pattern**: When adding new types (perplexity, gemini), update: enum definitions, badge variants, filter dropdowns, and type-specific rendering in one coordinated change.
+
 ### What to Avoid
 
 - [P00] **Avoid monolithic service files**: Split complex services into focused modules. Keep services under 300 lines when possible.
@@ -72,6 +76,8 @@ Proven patterns and anti-patterns. Reference during implementation.
 - [P02] **Avoid nullable fields without defaults**: Pydantic schemas should use `Optional[Type] = None` pattern. Don't use `Optional[Type]` without default value assignment.
 
 - [P03] **Don't hardcode timeouts**: Use settings classes with environment variable overrides. Deep research timeouts vary by use case; make configurable.
+
+- [P04] **Avoid polling without terminal detection**: Always define when polling should stop. Infinite polling wastes resources and causes poor UX.
 
 ### Tool/Library Notes
 
@@ -83,6 +89,8 @@ Proven patterns and anti-patterns. Reference during implementation.
 
 - [P03] **Pydantic v2 StrEnum**: Use `StrEnum` from standard library with Pydantic for enum validation. Values serialize to strings in JSON.
 
+- [P04] **react-markdown**: Used for rendering deep research reports. Supports GFM with remark-gfm plugin. Handles citations and formatting well.
+
 ---
 
 ## Resolved
@@ -91,10 +99,12 @@ Recently closed items (buffer - rotates out after 2 phases).
 
 | Phase | Item | Resolution |
 |-------|------|------------|
+| P04 | Perplexity API latency handling | Loading states with elapsed time indicators implemented |
+| P04 | Gemini polling duration | Progress indicators and reconnection via last_event_id implemented |
+| P04 | Sync vs async API patterns | Frontend handles both - Perplexity as mutation, Gemini as start/poll/cancel |
+| P04 | Item model for deep research | Added 'perplexity' and 'gemini' content_type values with proper save integration |
 | P03 | Perplexity/Gemini backend integration | Fully implemented with services, routes, and exception handling |
 | P02 | Item model needs source type flexibility | Extended Item model with source_type enum and relevant_data JSON field |
-| P01 | Frontend architecture decisions | Settled on TanStack Router/Query, React Hook Form, shadcn/ui stack |
-| P00 | Backend API structure | Established service layer pattern with FastAPI routes and deps.py injection |
 
 ---
 
