@@ -153,7 +153,7 @@ export type GeminiDeepResearchJobResponse = {
     /**
      * Unique identifier for this research interaction
      */
-    interaction_id: string;
+    id: string;
     /**
      * Initial status of the job (typically pending)
      */
@@ -161,7 +161,7 @@ export type GeminiDeepResearchJobResponse = {
     /**
      * Timestamp when the job was created
      */
-    created_at: string;
+    createTime?: (string | null);
     [key: string]: unknown | string | GeminiInteractionStatus;
 };
 
@@ -253,12 +253,12 @@ export type GeminiDeltaType = 'text' | 'tool_call' | 'status';
  *
  * Attributes:
  * PENDING: Job submitted but not yet started processing.
- * RUNNING: Job is actively being processed.
+ * IN_PROGRESS: Job is actively being processed.
  * COMPLETED: Job finished successfully with results available.
  * FAILED: Job encountered an error and could not complete.
  * CANCELLED: Job was cancelled before completion.
  */
-export type GeminiInteractionStatus = 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+export type GeminiInteractionStatus = 'pending' | 'in_progress' | 'completed' | 'failed' | 'cancelled';
 
 /**
  * Individual output segment from Gemini deep research response.

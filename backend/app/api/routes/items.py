@@ -7,7 +7,7 @@ from sqlmodel import func, select
 from app.api.deps import CurrentUser, SessionDep
 from app.models import Item, ItemCreate, ItemPublic, ItemsPublic, ItemUpdate, Message
 
-ContentTypeFilter = Literal["search", "extract", "crawl", "map"]
+ContentTypeFilter = Literal["search", "extract", "crawl", "map", "perplexity", "gemini"]
 
 router = APIRouter(prefix="/items", tags=["items"])
 

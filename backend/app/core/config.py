@@ -27,6 +27,7 @@ class PerplexityModel(StrEnum):
     SONAR_PRO = "sonar-pro"
     SONAR_REASONING = "sonar-reasoning"
     SONAR_REASONING_PRO = "sonar-reasoning-pro"
+    SONAR_DEEP_RESEARCH = "sonar-deep-research"
 
 
 class PerplexitySearchMode(StrEnum):
@@ -122,9 +123,9 @@ class PerplexitySettings(BaseSettings):
         description="Request timeout in seconds",
     )
 
-    # Default model for research queries
+    # Default model for research queries (sonar-deep-research for exhaustive research)
     default_model: PerplexityModel = Field(
-        default=PerplexityModel.SONAR_PRO,
+        default=PerplexityModel.SONAR_DEEP_RESEARCH,
         description="Default Perplexity model to use",
     )
 

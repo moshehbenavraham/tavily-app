@@ -233,8 +233,8 @@ class PerplexityDeepResearchRequest(BaseModel):
         description="The research query to answer",
     )
     model: str = Field(
-        default="sonar-pro",
-        description="Perplexity model to use (sonar, sonar-pro, sonar-reasoning)",
+        default="sonar-deep-research",
+        description="Perplexity model to use (sonar-deep-research for exhaustive research)",
     )
     system_prompt: str | None = Field(
         default=None,

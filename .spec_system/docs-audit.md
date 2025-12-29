@@ -57,6 +57,7 @@
 - `README.md` - Added Phases 03-04, Perplexity/Gemini endpoints, env vars
 - `docs/ARCHITECTURE.md` - Added deep research services, routes, data flows
 - `docs/onboarding.md` - Added Perplexity/Gemini API keys
+- `docs/environments.md` - Added PERPLEXITY_API_KEY and GEMINI_API_KEY to Optional Variables table
 - `backend/README_backend.md` - Added Perplexity/Gemini endpoints and files
 - `frontend/README_frontend.md` - Added deep research pages, components, hooks
 
@@ -66,7 +67,6 @@
 - `SECURITY.md` - Current
 - `docs/development.md` - Current
 - `docs/deployment.md` - Current
-- `docs/environments.md` - Current
 - `docs/CODEOWNERS` - Current
 - `docs/runbooks/incident-response.md` - Current
 - `docs/adr/0000-template.md` - Current
@@ -119,7 +119,7 @@ None - all standard documentation is present and current.
 |   +-- CODEOWNERS
 |   +-- deployment.md
 |   +-- development.md
-|   +-- environments.md
+|   +-- environments.md          [UPDATED]
 |   +-- frontend-ui-design.md
 |   +-- items-feature.md
 |   +-- local-deploy.md

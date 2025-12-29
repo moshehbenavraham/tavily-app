@@ -29,7 +29,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { usePerplexityDeepResearch } from "@/hooks/usePerplexityDeepResearch"
 import {
   modelOptions,
   type PerplexityFormData,
@@ -42,15 +41,15 @@ import {
 } from "@/lib/schemas/perplexity"
 
 interface PerplexityDeepResearchFormProps {
-  onResearchComplete?: (data: unknown) => void
-  onQuerySubmit?: (query: string) => void
-  isLoading?: boolean
+  onSubmit: (request: PerplexityDeepResearchRequest) => void
+  isLoading: boolean
+  disabled?: boolean
 }
 
 export function PerplexityDeepResearchForm({
-  onResearchComplete,
-  onQuerySubmit,
-  isLoading: externalLoading,
+  onSubmit: onSubmitProp,
+  isLoading,
+  disabled,
 }: PerplexityDeepResearchFormProps) {
   const [advancedOpen, setAdvancedOpen] = useState(false)
 
@@ -61,20 +60,13 @@ export function PerplexityDeepResearchForm({
     defaultValues: perplexityFormDefaults,
   })
 
-  const mutation = usePerplexityDeepResearch({
-    onSuccess: onResearchComplete,
-  })
-
-  const isLoading = externalLoading ?? mutation.isPending
+  const isFormDisabled = disabled || isLoading
 
   // Watch model to conditionally show reasoning_effort
   const selectedModel = form.watch("model")
   const showReasoningEffort = selectedModel === "sonar-reasoning"
 
   const onSubmit = (data: PerplexityFormData) => {
-    // Notify parent of query submission
-    onQuerySubmit?.(data.query)
-
     // Build request matching PerplexityDeepResearchRequest type
     const request: PerplexityDeepResearchRequest = {
       query: data.query,
@@ -97,7 +89,7 @@ export function PerplexityDeepResearchForm({
       return_related_questions: data.return_related_questions,
     }
 
-    mutation.mutate(request)
+    onSubmitProp(request)
   }
 
   return (
@@ -504,7 +496,11 @@ export function PerplexityDeepResearchForm({
         </Collapsible>
 
         {/* Submit Button */}
-        <LoadingButton type="submit" loading={isLoading} disabled={isLoading}>
+        <LoadingButton
+          type="submit"
+          loading={isLoading}
+          disabled={isFormDisabled}
+        >
           <Sparkles className="mr-2 h-4 w-4" />
           Start Research
         </LoadingButton>

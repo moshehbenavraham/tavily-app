@@ -67,6 +67,12 @@ Proven patterns and anti-patterns. Reference during implementation.
 
 - [P04] **Content type extension pattern**: When adding new types (perplexity, gemini), update: enum definitions, badge variants, filter dropdowns, and type-specific rendering in one coordinated change.
 
+- [P04] **State machine pattern for async workflows**: Define explicit states (idle, polling, completed, failed, cancelled) for complex async operations. Separates UI state from data state, prevents race conditions during polling.
+
+- [P04] **Query tracking via callback props**: Use onQuerySubmit callback to flow form data to result components without prop drilling. Maintains backward compatibility while enabling save functionality.
+
+- [P04] **Elapsed time counter with cleanup**: Use useEffect with setInterval for real-time feedback during long API calls. Always return cleanup function to clear interval on unmount or state change.
+
 ### What to Avoid
 
 - [P00] **Avoid monolithic service files**: Split complex services into focused modules. Keep services under 300 lines when possible.
@@ -104,7 +110,6 @@ Recently closed items (buffer - rotates out after 2 phases).
 | P04 | Sync vs async API patterns | Frontend handles both - Perplexity as mutation, Gemini as start/poll/cancel |
 | P04 | Item model for deep research | Added 'perplexity' and 'gemini' content_type values with proper save integration |
 | P03 | Perplexity/Gemini backend integration | Fully implemented with services, routes, and exception handling |
-| P02 | Item model needs source type flexibility | Extended Item model with source_type enum and relevant_data JSON field |
 
 ---
 

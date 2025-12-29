@@ -135,8 +135,11 @@ class GeminiService:
     ) -> dict[str, Any]:
         """Build API request payload from request schema.
 
-        Constructs the payload structure required by Gemini API including
-        the agent_config with type and agent specification for deep research.
+        Constructs the payload structure required by Gemini Interactions API.
+        Uses the correct field names: 'input' for query and 'agent' for agent name.
+
+        Note: enable_thinking_summaries is stored for future API compatibility
+        but is not currently sent to the Gemini API as it's not yet supported.
 
         Args:
             request: The deep research request with query and parameters.
@@ -145,18 +148,14 @@ class GeminiService:
             Dictionary formatted for the Gemini API interactions endpoint.
         """
         payload: dict[str, Any] = {
-            "query": request.query,
-            "agent_config": {
-                "type": "deep-research",
-                "agent": "deep-research-pro-preview-12-2025",
-            },
+            "input": request.query,
+            "agent": "deep-research-pro-preview-12-2025",
             "background": True,
-            "store": True,
         }
 
-        # Add optional parameters
-        if request.enable_thinking_summaries:
-            payload["enable_thinking_summaries"] = request.enable_thinking_summaries
+        # Note: enable_thinking_summaries is not currently supported by the Gemini API.
+        # The field is retained in the schema for future compatibility when Google
+        # adds support for this feature.
 
         if request.file_search_store_names:
             payload["file_search_store_names"] = request.file_search_store_names
@@ -211,11 +210,17 @@ class GeminiService:
             GeminiAPIError: If response format is unexpected.
         """
         try:
+            # DEBUG: Log raw response to understand structure
+            import json
+            print(f"DEBUG Gemini raw response: {json.dumps(response_data, indent=2, default=str)}")
             return GeminiDeepResearchResultResponse.model_validate(response_data)
         except Exception as exc:
+            # DEBUG: Log the validation error details
+            print(f"DEBUG Gemini parse error: {exc}")
+            print(f"DEBUG Response keys: {response_data.keys() if response_data else 'None'}")
             raise GeminiAPIError.api_error(
                 message="Failed to parse Gemini poll response.",
-                details={"original_error": str(exc)},
+                details={"original_error": str(exc), "response_keys": list(response_data.keys()) if response_data else []},
             ) from exc
 
     def _is_terminal_status(self, status: GeminiInteractionStatus) -> bool:

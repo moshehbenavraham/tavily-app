@@ -298,9 +298,9 @@ Contains the extracted content from a URL including text and images.`
 
 export const GeminiDeepResearchJobResponseSchema = {
     properties: {
-        interaction_id: {
+        id: {
             type: 'string',
-            title: 'Interaction Id',
+            title: 'Id',
             description: 'Unique identifier for this research interaction'
         },
         status: {
@@ -308,16 +308,23 @@ export const GeminiDeepResearchJobResponseSchema = {
             description: 'Initial status of the job (typically pending)',
             default: 'pending'
         },
-        created_at: {
-            type: 'string',
-            format: 'date-time',
-            title: 'Created At',
+        createTime: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Createtime',
             description: 'Timestamp when the job was created'
         }
     },
     additionalProperties: true,
     type: 'object',
-    required: ['interaction_id', 'created_at'],
+    required: ['id'],
     title: 'GeminiDeepResearchJobResponse',
     description: `Response schema for Gemini deep research job creation.
 
@@ -483,7 +490,7 @@ Attributes:
 
 export const GeminiInteractionStatusSchema = {
     type: 'string',
-    enum: ['pending', 'running', 'completed', 'failed', 'cancelled'],
+    enum: ['pending', 'in_progress', 'completed', 'failed', 'cancelled'],
     title: 'GeminiInteractionStatus',
     description: `Status states for Gemini deep research interactions.
 
@@ -492,7 +499,7 @@ submission through completion or failure.
 
 Attributes:
     PENDING: Job submitted but not yet started processing.
-    RUNNING: Job is actively being processed.
+    IN_PROGRESS: Job is actively being processed.
     COMPLETED: Job finished successfully with results available.
     FAILED: Job encountered an error and could not complete.
     CANCELLED: Job was cancelled before completion.`

@@ -17,7 +17,13 @@ export const recencyFilterOptions = ["hour", "day", "week", "month"] as const
 export type RecencyFilterOption = (typeof recencyFilterOptions)[number]
 
 // Model options for Perplexity deep research
-export const modelOptions = ["sonar", "sonar-pro", "sonar-reasoning"] as const
+export const modelOptions = [
+  "sonar",
+  "sonar-pro",
+  "sonar-reasoning",
+  "sonar-reasoning-pro",
+  "sonar-deep-research",
+] as const
 export type ModelOption = (typeof modelOptions)[number]
 
 // Date format regex for MM/DD/YYYY validation
@@ -103,7 +109,7 @@ export function parseDomainList(value: string): string[] | null {
 // Default form values
 export const perplexityFormDefaults: PerplexityFormData = {
   query: "",
-  model: "sonar",
+  model: "sonar-deep-research",
   system_prompt: "",
   search_mode: "auto",
   reasoning_effort: undefined,

@@ -3,7 +3,6 @@ import { Sparkles } from "lucide-react"
 import { useForm } from "react-hook-form"
 
 import type { GeminiDeepResearchRequest } from "@/client/types.gen"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -82,33 +81,8 @@ export function GeminiDeepResearchForm({
           )}
         />
 
-        {/* Options Row */}
-        <div className="flex flex-wrap gap-6">
-          {/* Enable Thinking Summaries */}
-          <FormField
-            control={form.control}
-            name="enable_thinking_summaries"
-            render={({ field }) => (
-              <FormItem className="flex items-center gap-2 space-y-0">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    disabled={disabled || isLoading}
-                  />
-                </FormControl>
-                <div>
-                  <FormLabel className="font-normal">
-                    Enable Thinking Summaries
-                  </FormLabel>
-                  <FormDescription className="text-xs">
-                    Include reasoning summaries in the response
-                  </FormDescription>
-                </div>
-              </FormItem>
-            )}
-          />
-        </div>
+        {/* Options Row - Thinking Summaries currently not supported by Gemini API */}
+        {/* Keeping the form field hidden for future compatibility when Google adds support */}
 
         {/* Submit Button */}
         <LoadingButton

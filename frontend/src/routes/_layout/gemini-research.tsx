@@ -61,7 +61,7 @@ function GeminiResearchPage() {
   // Start research mutation
   const startMutation = useGeminiStartResearch({
     onSuccess: (data) => {
-      setInteractionId(data.interaction_id)
+      setInteractionId(data.id)
       setCurrentStatus(data.status ?? "pending")
       setPageState("polling")
       setError(null)

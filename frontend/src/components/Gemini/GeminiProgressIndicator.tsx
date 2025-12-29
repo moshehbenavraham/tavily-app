@@ -20,7 +20,7 @@ function getStatusText(status: GeminiInteractionStatus): string {
   switch (status) {
     case "pending":
       return "Initializing research..."
-    case "running":
+    case "in_progress":
       return "Researching..."
     default:
       return "Processing..."

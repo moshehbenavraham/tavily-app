@@ -2,7 +2,10 @@ import { createFileRoute } from "@tanstack/react-router"
 import { Loader2, Sparkles } from "lucide-react"
 import { useEffect, useState } from "react"
 
-import type { PerplexityDeepResearchResponse } from "@/client/types.gen"
+import type {
+  PerplexityDeepResearchRequest,
+  PerplexityDeepResearchResponse,
+} from "@/client/types.gen"
 import {
   PerplexityDeepResearchForm,
   PerplexityResultView,
@@ -27,7 +30,6 @@ function PerplexityResearchPage() {
   const mutation = usePerplexityDeepResearch({
     onSuccess: (data) => {
       setResult(data)
-      setElapsedSeconds(0)
     },
   })
 
@@ -40,6 +42,8 @@ function PerplexityResearchPage() {
       interval = setInterval(() => {
         setElapsedSeconds((prev) => prev + 1)
       }, 1000)
+    } else {
+      setElapsedSeconds(0)
     }
 
     return () => {
@@ -49,8 +53,10 @@ function PerplexityResearchPage() {
     }
   }, [mutation.isPending])
 
-  const handleResearchComplete = (data: unknown) => {
-    setResult(data as PerplexityDeepResearchResponse)
+  const handleSubmit = (request: PerplexityDeepResearchRequest) => {
+    setLastQuery(request.query)
+    setResult(null)
+    mutation.mutate(request)
   }
 
   return (
@@ -77,8 +83,7 @@ function PerplexityResearchPage() {
       <Card className="page-enter-child" variant="elevated">
         <CardContent className="pt-6">
           <PerplexityDeepResearchForm
-            onResearchComplete={handleResearchComplete}
-            onQuerySubmit={setLastQuery}
+            onSubmit={handleSubmit}
             isLoading={mutation.isPending}
           />
         </CardContent>

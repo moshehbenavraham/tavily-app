@@ -41,6 +41,8 @@
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `PERPLEXITY_API_KEY` | (empty) | Perplexity API key for deep research |
+| `GEMINI_API_KEY` | (empty) | Gemini API key for deep research |
 | `SMTP_HOST` | (empty) | Email server hostname |
 | `SMTP_USER` | (empty) | Email server username |
 | `SMTP_PASSWORD` | (empty) | Email server password |

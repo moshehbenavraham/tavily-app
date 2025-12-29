@@ -30,14 +30,14 @@ class GeminiInteractionStatus(StrEnum):
 
     Attributes:
         PENDING: Job submitted but not yet started processing.
-        RUNNING: Job is actively being processed.
+        IN_PROGRESS: Job is actively being processed.
         COMPLETED: Job finished successfully with results available.
         FAILED: Job encountered an error and could not complete.
         CANCELLED: Job was cancelled before completion.
     """
 
     PENDING = "pending"
-    RUNNING = "running"
+    IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
     FAILED = "failed"
     CANCELLED = "cancelled"
@@ -116,6 +116,7 @@ class GeminiOutput(BaseModel):
 
     content: str = Field(
         default="",
+        validation_alias="text",
         description="Text content of this output segment",
     )
     thinking_summary: str | None = Field(
@@ -229,16 +230,19 @@ class GeminiDeepResearchJobResponse(BaseModel):
     Contains the interaction ID needed for subsequent polling.
     """
 
-    model_config = ConfigDict(extra="allow")
+    model_config = ConfigDict(extra="allow", populate_by_name=True)
 
     interaction_id: str = Field(
+        alias="id",
         description="Unique identifier for this research interaction",
     )
     status: GeminiInteractionStatus = Field(
         default=GeminiInteractionStatus.PENDING,
         description="Initial status of the job (typically pending)",
     )
-    created_at: datetime = Field(
+    created_at: datetime | None = Field(
+        default=None,
+        alias="createTime",
         description="Timestamp when the job was created",
     )
 
