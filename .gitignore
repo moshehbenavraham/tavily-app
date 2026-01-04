@@ -1,6 +1,14 @@
+# .gitignore for the project
+
+# General
 .vscode
 node_modules/
 EXAMPLE/
+EXAMPLE_CODE/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
 
 # Environment files (ignore all .env files except .example)
 .env
@@ -9,7 +17,3 @@ EXAMPLE/
 **/.env
 !.env.example
 !**/.env.example
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
