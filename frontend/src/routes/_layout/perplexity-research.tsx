@@ -16,7 +16,7 @@ import { usePerplexityDeepResearch } from "@/hooks/usePerplexityDeepResearch"
 export const Route = createFileRoute("/_layout/perplexity-research")({
   component: PerplexityResearchPage,
   head: () => ({
-    meta: [{ title: "Perplexity Research - Tavily App" }],
+    meta: [{ title: "Perplexity Research - AI Search" }],
   }),
 })
 

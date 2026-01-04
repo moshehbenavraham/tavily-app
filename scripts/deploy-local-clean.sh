@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# deploy-local-clean.sh - Safe local rebuild script for Tavily App
+# deploy-local-clean.sh - Safe local rebuild script for AI Search
 #
 # This script performs a SAFE rebuild that PRESERVES your database data.
 # It rebuilds all Docker images from scratch while keeping your volumes intact.
@@ -13,7 +13,7 @@
 #   --skip-cache Skip cleaning build cache (faster but less thorough)
 #   --help       Show this help message
 #
-# Author: Tavily Team
+# Author: AI Search Team
 # Date: 2025-12-22
 #
 
@@ -26,11 +26,11 @@ set -e  # Exit on error
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 IMAGES=(
-    "tavily-backend:latest"
-    "tavily-frontend:latest"
-    "tavily-app-playwright:latest"
+    "ai-search-backend:latest"
+    "ai-search-frontend:latest"
+    "ai-search-playwright:latest"
 )
-VOLUME_NAME="tavily-app_app-db-data"
+VOLUME_NAME="ai-search_app-db-data"
 
 # =============================================================================
 # COLORS & FORMATTING
@@ -56,12 +56,12 @@ print_banner() {
     echo -e "${CYAN}"
     cat << 'EOF'
 
-  ████████╗ █████╗ ██╗   ██╗██╗██╗  ██╗   ██╗
-  ╚══██╔══╝██╔══██╗██║   ██║██║██║  ╚██╗ ██╔╝
-     ██║   ███████║██║   ██║██║██║   ╚████╔╝
-     ██║   ██╔══██║╚██╗ ██╔╝██║██║    ╚██╔╝
-     ██║   ██║  ██║ ╚████╔╝ ██║███████╗██║
-     ╚═╝   ╚═╝  ╚═╝  ╚═══╝  ╚═╝╚══════╝╚═╝
+   █████╗ ██╗    ███████╗███████╗ █████╗ ██████╗  ██████╗██╗  ██╗
+  ██╔══██╗██║    ██╔════╝██╔════╝██╔══██╗██╔══██╗██╔════╝██║  ██║
+  ███████║██║    ███████╗█████╗  ███████║██████╔╝██║     ███████║
+  ██╔══██║██║    ╚════██║██╔══╝  ██╔══██║██╔══██╗██║     ██╔══██║
+  ██║  ██║██║    ███████║███████╗██║  ██║██║  ██║╚██████╗██║  ██║
+  ╚═╝  ╚═╝╚═╝    ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
 
 EOF
     echo -e "${NC}"
@@ -80,7 +80,7 @@ print_safe_mode() {
     ║                                                           ║
     ║   ✓ All user accounts will remain                         ║
     ║   ✓ All application data will remain                      ║
-    ║   ✓ Volume: tavily-app_app-db-data is protected           ║
+    ║   ✓ Volume: ai-search_app-db-data is protected            ║
     ║                                                           ║
     ╚═══════════════════════════════════════════════════════════╝
 EOF
@@ -96,7 +96,7 @@ print_nuclear_warning() {
     ║                                                           ║
     ║   ✗ All user accounts will be DELETED                    ║
     ║   ✗ All application data will be DELETED                 ║
-    ║   ✗ Volume: tavily-app_app-db-data will be REMOVED       ║
+    ║   ✗ Volume: ai-search_app-db-data will be REMOVED        ║
     ║                                                           ║
     ║              THIS CANNOT BE UNDONE!                       ║
     ║                                                           ║
@@ -114,7 +114,7 @@ print_stop_mode() {
     ║                                                           ║
     ║   ✓ All containers will be stopped                        ║
     ║   ✓ All application data will remain                      ║
-    ║   ✓ Volume: tavily-app_app-db-data is protected           ║
+    ║   ✓ Volume: ai-search_app-db-data is protected            ║
     ║                                                           ║
     ╚═══════════════════════════════════════════════════════════╝
 EOF
@@ -192,7 +192,7 @@ log_detail() {
 
 # Get the host port for a container's internal port
 # Usage: get_container_port <container_name> <internal_port>
-# Example: get_container_port tavily-app-backend-1 8000
+# Example: get_container_port ai-search-backend-1 8000
 get_container_port() {
     local container=$1
     local internal_port=$2
@@ -228,7 +228,7 @@ confirm_nuclear() {
 show_help() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
-    echo "Safe local rebuild script for Tavily App"
+    echo "Safe local rebuild script for AI Search"
     echo ""
     echo "Options:"
     echo "  --stop        Stop all services without rebuilding (preserves data)"
@@ -333,9 +333,9 @@ START_TIME=$(date +%s)
 # -----------------------------------------------------------------------------
 log_step 1 $TOTAL_STEPS "Surveying current state"
 
-CONTAINER_COUNT=$(docker ps -a --filter "name=tavily-app" --format "{{.Names}}" 2>/dev/null | wc -l || echo "0")
+CONTAINER_COUNT=$(docker ps -a --filter "name=ai-search" --format "{{.Names}}" 2>/dev/null | wc -l || echo "0")
 VOLUME_EXISTS=$(docker volume ls --filter "name=$VOLUME_NAME" --format "{{.Name}}" 2>/dev/null | grep -c "$VOLUME_NAME" || echo "0")
-IMAGE_COUNT=$(docker images --filter "reference=tavily*" --format "{{.Repository}}" 2>/dev/null | wc -l || echo "0")
+IMAGE_COUNT=$(docker images --filter "reference=ai-search*" --format "{{.Repository}}" 2>/dev/null | wc -l || echo "0")
 
 log_detail "Containers found: $CONTAINER_COUNT"
 log_detail "Database volume exists: $([ "$VOLUME_EXISTS" -gt 0 ] && echo 'YES' || echo 'NO')"
@@ -461,8 +461,8 @@ sleep 5
 MAX_ATTEMPTS=30
 ATTEMPT=0
 while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
-    BACKEND_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' tavily-app-backend-1 2>/dev/null || echo "unknown")
-    DB_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' tavily-app-db-1 2>/dev/null || echo "unknown")
+    BACKEND_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' ai-search-backend-1 2>/dev/null || echo "unknown")
+    DB_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' ai-search-db-1 2>/dev/null || echo "unknown")
 
     if [ "$BACKEND_HEALTH" = "healthy" ] && [ "$DB_HEALTH" = "healthy" ]; then
         break
@@ -475,9 +475,9 @@ done
 echo ""
 
 # Final status check
-BACKEND_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' tavily-app-backend-1 2>/dev/null || echo "unknown")
-DB_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' tavily-app-db-1 2>/dev/null || echo "unknown")
-FRONTEND_STATUS=$(docker inspect --format='{{.State.Status}}' tavily-app-frontend-1 2>/dev/null || echo "unknown")
+BACKEND_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' ai-search-backend-1 2>/dev/null || echo "unknown")
+DB_HEALTH=$(docker inspect --format='{{.State.Health.Status}}' ai-search-db-1 2>/dev/null || echo "unknown")
+FRONTEND_STATUS=$(docker inspect --format='{{.State.Status}}' ai-search-frontend-1 2>/dev/null || echo "unknown")
 
 if [ "$BACKEND_HEALTH" = "healthy" ] && [ "$DB_HEALTH" = "healthy" ] && [ "$FRONTEND_STATUS" = "running" ]; then
     log_success "Database:  healthy"
@@ -491,12 +491,12 @@ else
 fi
 
 # Get dynamic ports from running containers
-PORT_DB=$(get_container_port tavily-app-db-1 5432)
-PORT_BACKEND=$(get_container_port tavily-app-backend-1 8000)
-PORT_FRONTEND=$(get_container_port tavily-app-frontend-1 80)
-PORT_ADMINER=$(get_container_port tavily-app-adminer-1 8080)
-PORT_MAILCATCHER=$(get_container_port tavily-app-mailcatcher-1 1080)
-PORT_TRAEFIK=$(get_container_port tavily-app-proxy-1 8080)
+PORT_DB=$(get_container_port ai-search-db-1 5432)
+PORT_BACKEND=$(get_container_port ai-search-backend-1 8000)
+PORT_FRONTEND=$(get_container_port ai-search-frontend-1 80)
+PORT_ADMINER=$(get_container_port ai-search-adminer-1 8080)
+PORT_MAILCATCHER=$(get_container_port ai-search-mailcatcher-1 1080)
+PORT_TRAEFIK=$(get_container_port ai-search-proxy-1 8080)
 
 # -----------------------------------------------------------------------------
 # SUMMARY

@@ -14,7 +14,7 @@ import { useExtract } from "@/hooks/useExtract"
 export const Route = createFileRoute("/_layout/extract")({
   component: ExtractPage,
   head: () => ({
-    meta: [{ title: "Extract - Tavily App" }],
+    meta: [{ title: "Extract - AI Search" }],
   }),
 })
 

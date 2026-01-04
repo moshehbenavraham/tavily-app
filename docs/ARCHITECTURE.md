@@ -2,7 +2,7 @@
 
 ## System Overview
 
-tavily-app is a full-stack application that integrates multiple AI-powered research APIs:
+ai-search is a full-stack application that integrates multiple AI-powered research APIs:
 - **Tavily** - Web search, extraction, crawling, and sitemap generation
 - **Perplexity Sonar** - Synchronous deep research with citations
 - **Google Gemini** - Asynchronous deep research with polling

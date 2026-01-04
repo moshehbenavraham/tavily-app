@@ -1,4 +1,4 @@
-# Tavily App: A Full-Stack Application Built in Two Afternoons
+# AI Search: A Full-Stack Application Built in Two Afternoons
 
 ## The Experiment
 
@@ -165,7 +165,7 @@ This is a proof-of-concept for **agentic software development**: AI following a 
 ```bash
 # Clone and setup
 git clone <repo>
-cd tavily-app
+cd ai-search
 
 # Backend
 cd backend && uv sync && source .venv/bin/activate

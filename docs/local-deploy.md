@@ -1,6 +1,6 @@
-# Tavily App Local Deployment Guide
+# AI Search Local Deployment Guide
 
-Complete guide for taking down, cleaning, rebuilding, and restarting the Tavily app locally.
+Complete guide for taking down, cleaning, rebuilding, and restarting the AI Search app locally.
 
 ---
 
@@ -63,7 +63,7 @@ Use this 99% of the time. Rebuilds all code/images but keeps your database intac
 docker compose down --remove-orphans
 
 # Remove old images to force fresh build
-docker rmi tavily-backend:latest tavily-frontend:latest tavily-app-playwright:latest 2>/dev/null || true
+docker rmi ai-search-backend:latest ai-search-frontend:latest ai-search-playwright:latest 2>/dev/null || true
 
 # Clean build cache (optional, for thorough rebuild)
 docker builder prune -af
@@ -80,7 +80,7 @@ docker compose up -d
 - All database tables and data
 - All user accounts
 - All application records
-- Volume: `tavily-app_app-db-data`
+- Volume: `ai-search_app-db-data`
 
 **What this rebuilds:**
 - All Docker images (backend, frontend, playwright)
@@ -112,7 +112,7 @@ Only use when you truly need a completely fresh start:
 docker compose down --remove-orphans -v
 
 # Remove all images
-docker rmi tavily-backend:latest tavily-frontend:latest tavily-app-playwright:latest 2>/dev/null || true
+docker rmi ai-search-backend:latest ai-search-frontend:latest ai-search-playwright:latest 2>/dev/null || true
 
 # Clean everything
 docker builder prune -af
@@ -148,7 +148,7 @@ docker image prune                     # Remove dangling images
 ```bash
 docker compose down -v                 # DESTROYS database volume
 docker compose down --volumes          # DESTROYS database volume (same as -v)
-docker volume rm tavily-app_app-db-data  # DESTROYS database volume directly
+docker volume rm ai-search_app-db-data  # DESTROYS database volume directly
 docker system prune --volumes          # DESTROYS ALL unused volumes system-wide
 docker volume prune                    # DESTROYS ALL unused volumes
 ```
@@ -157,21 +157,21 @@ docker volume prune                    # DESTROYS ALL unused volumes
 
 ## Architecture Overview
 
-The Tavily app consists of the following services:
+The AI Search app consists of the following services:
 
 | Service      | Image                    | Port(s)              | Purpose                    |
 |--------------|--------------------------|----------------------|----------------------------|
 | db           | postgres:17              | 5441:5432            | PostgreSQL database        |
-| backend      | tavily-backend:latest    | 8009:8000            | FastAPI backend            |
-| frontend     | tavily-frontend:latest   | 5179:80              | Nginx serving React app    |
+| backend      | ai-search-backend:latest    | 8009:8000            | FastAPI backend            |
+| frontend     | ai-search-frontend:latest   | 5179:80              | Nginx serving React app    |
 | proxy        | traefik:3.3              | 80, 8090:8080        | Reverse proxy (disabled)   |
 | adminer      | adminer                  | 8088:8080            | Database admin UI          |
 | mailcatcher  | schickling/mailcatcher   | 1080, 1025           | Email testing              |
-| playwright   | tavily-app-playwright    | 9323                 | E2E testing (runs once)    |
-| prestart     | tavily-backend:latest    | -                    | DB migrations (runs once)  |
+| playwright   | ai-search-playwright    | 9323                 | E2E testing (runs once)    |
+| prestart     | ai-search-backend:latest    | -                    | DB migrations (runs once)  |
 
 **Data Storage:**
-- Database data lives in Docker volume: `tavily-app_app-db-data`
+- Database data lives in Docker volume: `ai-search_app-db-data`
 - This volume persists across container restarts
 - This volume is ONLY deleted when using `-v` flag
 
@@ -192,11 +192,11 @@ The Tavily app consists of the following services:
 docker compose ps -a
 
 # Check volumes (this is where your data lives!)
-docker volume ls --filter "name=tavily"
-# Expected: tavily-app_app-db-data
+docker volume ls --filter "name=ai-search"
+# Expected: ai-search_app-db-data
 
 # Check images
-docker images --filter "reference=tavily*"
+docker images --filter "reference=ai-search*"
 ```
 
 ### Step 2: Stop All Services (Data Safe)
@@ -210,12 +210,12 @@ docker compose down --remove-orphans
 - Networks
 
 **This KEEPS:**
-- Volume `tavily-app_app-db-data` (your database!)
+- Volume `ai-search_app-db-data` (your database!)
 
 ### Step 3: Remove Old Images
 
 ```bash
-docker rmi tavily-backend:latest tavily-frontend:latest tavily-app-playwright:latest 2>/dev/null || true
+docker rmi ai-search-backend:latest ai-search-frontend:latest ai-search-playwright:latest 2>/dev/null || true
 ```
 
 ### Step 4: Clean Build Cache (Optional)
@@ -228,8 +228,8 @@ docker image prune -f
 ### Step 5: Verify Volume Still Exists
 
 ```bash
-docker volume ls --filter "name=tavily"
-# Should show: tavily-app_app-db-data
+docker volume ls --filter "name=ai-search"
+# Should show: ai-search_app-db-data
 ```
 
 If you see the volume, your data is safe!
@@ -281,15 +281,15 @@ ls -la backup_*.sql
 
 ```bash
 docker compose ps -a
-docker volume ls --filter "name=tavily"
-docker images --filter "reference=tavily*"
+docker volume ls --filter "name=ai-search"
+docker images --filter "reference=ai-search*"
 ```
 
 **Expected resources:**
 - Containers: 8
-- Networks: 2 (tavily-app_default, tavily-app_traefik-public)
-- Volumes: 1 (tavily-app_app-db-data) - **WILL BE DESTROYED**
-- Images: 3 (tavily-backend, tavily-frontend, tavily-app-playwright)
+- Networks: 2 (ai-search_default, ai-search_traefik-public)
+- Volumes: 1 (ai-search_app-db-data) - **WILL BE DESTROYED**
+- Images: 3 (ai-search-backend, ai-search-frontend, ai-search-playwright)
 
 ### Step 2: Take Down Everything Including Volumes
 
@@ -301,12 +301,12 @@ docker compose down --remove-orphans -v
 **This removes:**
 - All 8 containers
 - Networks
-- **Volume tavily-app_app-db-data (ALL YOUR DATA)**
+- **Volume ai-search_app-db-data (ALL YOUR DATA)**
 
 ### Step 3: Remove Docker Images
 
 ```bash
-docker rmi tavily-backend:latest tavily-frontend:latest tavily-app-playwright:latest
+docker rmi ai-search-backend:latest ai-search-frontend:latest ai-search-playwright:latest
 ```
 
 ### Step 4: Clean Build Cache
@@ -320,10 +320,10 @@ docker image prune -f
 
 ```bash
 # All should return empty
-docker ps -a --filter "name=tavily"
-docker network ls --filter "name=tavily"
-docker volume ls --filter "name=tavily"    # <-- Should be EMPTY now
-docker images --filter "reference=tavily*"
+docker ps -a --filter "name=ai-search"
+docker network ls --filter "name=ai-search"
+docker volume ls --filter "name=ai-search"    # <-- Should be EMPTY now
+docker images --filter "reference=ai-search*"
 
 # Verify ports are free
 lsof -i :5179 -i :8009 -i :8088 -i :5439 -i :1080 -i :1025 -i :8090
@@ -430,7 +430,7 @@ docker compose logs db
 
 ```bash
 lsof -i :8009
-docker rm -f tavily-app-backend-1
+docker rm -f ai-search-backend-1
 ```
 
 ### Image build fails
@@ -464,16 +464,16 @@ The warning `The "CI" variable is not set` is normal for local development.
 ### Volume Persistence (Important!)
 
 ```
-Database data location: Docker volume "tavily-app_app-db-data"
+Database data location: Docker volume "ai-search_app-db-data"
 
 This volume:
 - Persists across: docker compose down, docker compose restart, container rebuilds
 - Is DESTROYED by: docker compose down -v, docker volume rm, docker volume prune
 
 To check if your data is safe:
-docker volume ls --filter "name=tavily"
+docker volume ls --filter "name=ai-search"
 
-If you see "tavily-app_app-db-data" listed, your data exists.
+If you see "ai-search_app-db-data" listed, your data exists.
 ```
 
 ### Prestart Service
@@ -497,7 +497,7 @@ Docker provider disabled for local dev. Access services directly via exposed por
 **Duration:** ~5 minutes
 
 **What was destroyed:**
-- Volume: tavily-app_app-db-data (all database data)
+- Volume: ai-search_app-db-data (all database data)
 - All user accounts
 - All application data
 

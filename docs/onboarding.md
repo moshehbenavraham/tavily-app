@@ -18,8 +18,8 @@ Zero-to-hero checklist for new developers.
 ### 1. Clone Repository
 
 ```bash
-git clone git@github.com:your-org/tavily-app.git
-cd tavily-app
+git clone git@github.com:moshehbenavraham/ai-search.git
+cd ai-search
 ```
 
 ### 2. Configure Environment

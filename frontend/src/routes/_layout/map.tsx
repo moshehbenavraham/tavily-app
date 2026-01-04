@@ -14,7 +14,7 @@ import { useMap } from "@/hooks/useMap"
 export const Route = createFileRoute("/_layout/map")({
   component: MapPage,
   head: () => ({
-    meta: [{ title: "Map - Tavily App" }],
+    meta: [{ title: "Map - AI Search" }],
   }),
 })
 

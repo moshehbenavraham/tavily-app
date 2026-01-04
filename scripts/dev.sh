@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# dev.sh - Local development script for Tavily App
+# dev.sh - Local development script for AI Search
 #
 # Starts database (Docker), backend (native), and frontend (native) with hot reload.
 # All output is combined in one terminal with colored prefixes.
@@ -44,7 +44,7 @@ BOLD='\033[1m'
 # =============================================================================
 
 show_help() {
-    echo -e "${CYAN}dev.sh${NC} - Local development script for Tavily App"
+    echo -e "${CYAN}dev.sh${NC} - Local development script for AI Search"
     echo ""
     echo -e "${BOLD}USAGE:${NC}"
     echo "    ./scripts/dev.sh [OPTIONS]"
@@ -182,7 +182,7 @@ print_banner() {
     cat << 'EOF'
   ╔═══════════════════════════════════════════════════════════════╗
   ║                                                               ║
-  ║   🚀  TAVILY APP - LOCAL DEVELOPMENT                         ║
+  ║   🚀  AI SEARCH - LOCAL DEVELOPMENT                          ║
   ║                                                               ║
   ║   Press Ctrl+C to stop all services                          ║
   ║                                                               ║

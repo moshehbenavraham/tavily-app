@@ -2,7 +2,7 @@
 
 ## Overview
 
-tavily-app exposes REST API endpoints for three AI-powered research services:
+ai-search exposes REST API endpoints for three AI-powered research services:
 
 1. **Tavily** - Web search, extraction, crawling, sitemap
 2. **Perplexity Sonar** - Synchronous deep research with citations

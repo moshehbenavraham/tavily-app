@@ -14,7 +14,7 @@ import { useCrawl } from "@/hooks/useCrawl"
 export const Route = createFileRoute("/_layout/crawl")({
   component: CrawlPage,
   head: () => ({
-    meta: [{ title: "Crawl - Tavily App" }],
+    meta: [{ title: "Crawl - AI Search" }],
   }),
 })
 

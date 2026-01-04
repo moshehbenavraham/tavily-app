@@ -1,4 +1,4 @@
-# tavily-app
+# ai-search
 
 AI-powered research application integrating Tavily, Perplexity Sonar, and Google Gemini APIs with a FastAPI backend and React frontend.
 

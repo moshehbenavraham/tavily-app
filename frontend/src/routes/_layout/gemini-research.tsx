@@ -25,7 +25,7 @@ import {
 export const Route = createFileRoute("/_layout/gemini-research")({
   component: GeminiResearchPage,
   head: () => ({
-    meta: [{ title: "Gemini Research - Tavily App" }],
+    meta: [{ title: "Gemini Research - AI Search" }],
   }),
 })
 

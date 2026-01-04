@@ -16,7 +16,7 @@ import { useTavilySearch } from "@/hooks/useTavilySearch"
 export const Route = createFileRoute("/_layout/search")({
   component: SearchPage,
   head: () => ({
-    meta: [{ title: "Search - Tavily App" }],
+    meta: [{ title: "Search - AI Search" }],
   }),
 })
 
