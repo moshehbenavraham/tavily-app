@@ -1,6 +1,6 @@
 # ai-search
 
-AI-powered research application integrating Tavily, Perplexity Sonar, and Google Gemini APIs with a FastAPI backend and React frontend.
+AI-powered research application integrating Tavily, Perplexity Sonar, and Google Gemini APIs with a FastAPI backend and React frontend.  Project was started on FastAPI's Boilerplate.
 
 ## Quick Start
 
@@ -28,8 +28,7 @@ Access the app at http://localhost:5179
 │   │   └── routes/         # Page routes
 │   └── tests/              # Playwright e2e tests
 ├── docs/              # Reference documentation
-├── scripts/           # Development scripts
-└── .spec_system/      # Project specifications and PRD
+└── scripts/           # Development scripts
 ```
 
 ## API Endpoints
@@ -62,8 +61,8 @@ All endpoints require JWT authentication.
 
 ## Documentation
 
-- [Development Guide](development.md) - Local setup and Docker workflow
-- [Deployment Guide](deployment.md) - Production deployment with Traefik
+- [Development Guide](docs/development.md) - Local setup and Docker workflow
+- [Deployment Guide](docs/deployment.md) - Production deployment with Traefik
 - [Architecture](docs/ARCHITECTURE.md) - System design and data flow
 - [Onboarding](docs/onboarding.md) - New developer checklist
 - [Backend README](backend/README_backend.md) - Backend-specific docs
@@ -98,18 +97,6 @@ Copy `.env.example` to `.env` and configure:
 | `SECRET_KEY` | Yes | JWT signing key |
 | `POSTGRES_PASSWORD` | Yes | Database password |
 | `FIRST_SUPERUSER_PASSWORD` | Yes | Initial admin password |
-
-## Project Status
-
-| Phase | Name | Sessions | Status |
-|-------|------|----------|--------|
-| 00 | Core Setup | 6 | Complete |
-| 01 | Frontend Integration | 6 | Complete |
-| 02 | Saving Results to Items | 3 | Complete |
-| 03 | Deep Research Backend | 6 | Complete |
-| 04 | Deep Research Frontend | 6 | Complete |
-
-All 27 sessions across 5 phases are complete. See [PRD](.spec_system/PRD/PRD.md) for details.
 
 ## License
 
